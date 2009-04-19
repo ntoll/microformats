@@ -1,0 +1,303 @@
+[
+  {
+    "pk": 1, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "intl"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "dom"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "postal"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "parcel"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "home"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "work"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "microformats.adr_type", 
+    "fields": {
+      "name": "pref"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "voice"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "home"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "msg"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "work"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "pref"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "fax"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "cell"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "video"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "pager"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "bbs"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "modem"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "car"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "isdn"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "microformats.tel_type", 
+    "fields": {
+      "name": "pcs"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "microformats.email_type", 
+    "fields": {
+      "name": "internet"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "microformats.email_type", 
+    "fields": {
+      "name": "x400"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "microformats.email_type", 
+    "fields": {
+      "name": "pref"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "microformats.email_type", 
+    "fields": {
+      "name": "other"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "friend"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "acquaintance"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "contact"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "met"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "co-worker"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "colleague"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "co-resident"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "neighbor"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "child"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "parent"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "sibling"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "spouse"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "kin"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "muse"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "crush"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "date"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "sweetheart"
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "microformats.xfn_values", 
+    "fields": {
+      "value": "me"
+    }
+  }
+]

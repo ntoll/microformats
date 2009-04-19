@@ -1,0 +1,71 @@
+body {
+    background:#FFFFFF url(swoosh.png) repeat-x scroll 0 0;
+    color:#666666;
+    font-family:arial,sans;
+    font-size:62.5%;
+}
+
+#ufContainer {
+    margin-left:auto;
+    margin-right:auto;
+    width:75%;
+}
+
+a:link {
+    color:#557799;
+    text-decoration:none;
+}
+a:hover {
+    color:#CC0000;
+    text-decoration:underline;
+}
+a:active {
+    color:#557799;
+    text-decoration:none;
+}
+a:active:hover {
+    color:#CC0000;
+    text-decoration:underline;
+}
+a:visited {
+    color:#557799;
+    text-decoration:none;
+}
+a:visited:hover {
+    color:#CC0000;
+    text-decoration:underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color:#B4C24B;
+    font-family:Times;
+    font-style:italic;
+    font-weight:normal;
+}
+
+#ufContent {
+    font-size:1.2em;
+    padding-bottom:20px;
+    padding-top:4px;
+    text-align:justify;
+}
+
+#ufTitle {
+    font-size:2.0em;
+    border-bottom:1px solid #CCCCCC;
+}
+
+#ufTitle h1 {
+    color:#E87830;
+}
+
+#ufFooter {
+    border-top:1px solid #CCCCCC;
+    clear:both;
+    font-size:1em;
+    height:2em;
+    margin-top:1px;
+    padding-top:1em;
+    text-align:center;
+    text-transform:lowercase;
+}
