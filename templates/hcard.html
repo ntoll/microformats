@@ -1,0 +1,28 @@
+{% load i18n %}
+<div id="hcard_{{instance.id}}" class="vcard">
+    <div class="fn n">
+        {% if instance.url %}<a href="{{instance.url}}" class="url">{% endif %}
+        {% if instance.n %}
+            {% if instance.honorific_prefix %}<span class="honorific-prefix">{{instance.honorific_prefix}}</span>{% endif %}
+            {% if instance.given_name %}<span class="given-name">{{instance.given_name}}</span>{% endif %}
+            {% if instance.additional_name %}<span class="additional-name">{{instance.additional_name}}</span>{% endif %}
+            {% if instance.family_name %}<span class="family-name">{{instance.family_name}}</span>{% endif%}
+            {% if instance.honorific_suffix %}<span class="honorific-suffix">{{instance.honorific_suffix}}</span>{% endif %}
+        {% else %}
+        <span class="org">{{instance.org}}</span>
+        {% endif %}
+        {% if instance.url %}</a>{% endif %}
+    </div>
+    {% if instance.n %}
+    {% if instance.title %}<span class="title">{{instance.title}}</span>{% endif %}
+    {% if instance.org %}
+    <div class="org">{{instance.org}}</div>
+    {% endif %}
+    {% endif %}
+    {% if instance.email_work %}<a class="email" href="mailto:{{instance.email_work}}">{{instance.email_work}}</a> {% trans "[work]" %}<br/>{% endif %} 
+    {% if instance.email_home %}<a class="email" href="mailto:{{instance.email_home}}">{{instance.email_home}}</a> {% trans "[home]" %}<br/>{% endif %} 
+    {% include adr_microformat_template %}
+    {% if instance.tel_work %}<div class="tel"><span class="value">{{instance.tel_work}}</span> [<abbr class="type" title="work">{% trans "work" %}</abbr>]</div>{% endif %}
+    {% if instance.tel_home %}<div class="tel"><span class="value">{{instance.tel_home}}</span> [<abbr class="type" title="home">{% trans "home" %}</abbr>]</div>{% endif %}
+    {% if instance.tel_fax %}<div class="tel"><span class="value">{{instance.tel_fax}}</span> [<abbr class="type" title="fax">{% trans "fax" %}</abbr>]</div>{% endif %}
+</div>

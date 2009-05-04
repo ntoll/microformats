@@ -1,0 +1,80 @@
+{% load microformat_extras %}
+<html>
+<head>
+<title>Testing Microformats</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="oomphx.js"></script>
+<link rel="stylesheet" href="ufstyle.css" type="text/css" media="screen" />
+</head>
+<body>
+<div id="ufContainer">
+<div id='ufTitle'>
+<h1>Microformat Test Card</h1>
+</div>
+<div id='ufContent'>
+<p> This page contains examples of microformats as rendered by the microformats 
+Django application. <a href="http://microformats.org/">Microformats</a> are a 
+means of adding semantic information that is <em>both</em> human and machine 
+readable to a web-site. In order to work with Microformats you need to use a 
+toolkit such as <a href="http://visitmix.com/Lab/oomph">Oomph</a> (included as 
+a javascript plugin with this page - if you're online you should see it's logo 
+in the top left hand side of the screen) or the 
+<a href="https://addons.mozilla.org/en-US/firefox/addon/4106">Operator 
+Add-on</a> for Firefox (that supports more types of microformat).</p>
+
+<h2>Geo</h2>
+<!-- loc is an instance of the geo uFormat -->
+{{loc|geo:"A Geo-location"}}
+
+<h2>hCard</h2>
+<!-- contact is an instance of hCard -->
+{{contact|hcard}}
+
+<!-- event is an instance of hCalendar -->
+<h2>hCalendar</h2>
+{{event|hcal}}
+
+<!-- person is an instance of XFN -->
+<h2>XFN</h2>
+{{person|xfn}}
+
+<h2>Some Free Text Examples</h2>
+
+<!-- loc2 is another geo instance -->
+<h3>Geo</h3>
+<p class="geo">We spent a long time trying to find Fred's house using the GPS 
+to lead us to {{loc2.latitude|geo:"latitude"}} / 
+{{loc2.longitude|geo:"longitude"}}, but we got there in the end.
+</p>
+
+<!-- c2 is a second contact that is an hCard instance -->
+<h3>hCard</h3>
+<p class="vcard">
+Whilst researching my programme notes for the upcoming performance of the 
+Vaughan-William's Tuba Concerto, I found a recording with <span class="fn">
+{{c2.given_name|hcard:"given-name"}} {{c2.family_name|hcard:"family-name"}}
+</span> as the soloist. He was {{c2.title|hcard:"role"}} in the
+{{c2.org|hcard:"org"}} during the 1970's. More information about this rare
+recording can be found by contacting their offices at 
+<span clas="adr">{{c2.street_address|hcard:"street-address"}} in
+{{c2.locality|hcard:"locality"}}</span>.
+</p>
+
+<!-- event2 is another hCalendar -->
+<h3>hCalendar</h3>
+<p class="vevent">
+In the early hours of 
+{{event2.dtstart|hcal:"dtstart %B %d %Y"}}
+{{event2.summary|hcal:"summary"}} commenced throughout 
+{{event2.location|hcal:"location"}}. The aims of this
+operation were summarised thus,
+<q>{{event2.description|hcal:"description"}}</q>
+</p>
+</div>
+<div id="ufFooter">
+&copy; 2009 <a href="http://ntoll.org/">Nicholas H.Tollervey</a>
+</div>
+</div>
+</body>
+</html>

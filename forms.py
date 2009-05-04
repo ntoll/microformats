@@ -42,7 +42,7 @@ from django.utils.translation import ugettext as _
 
 # Microformats
 from microformats.models import geo, hCard, adr, adr_type, org, email,\
-        email_type, tel, tel_type, hCalendar
+        email_type, tel, tel_type, hCalendar, hReview, hListing
 
 class GeoForm(forms.ModelForm):
     """
@@ -69,13 +69,59 @@ class GeoForm(forms.ModelForm):
         value = self.cleaned_data['longitude']
         if value < -180.0 or value > 180.0:
             raise forms.ValidationError(_(u'Longitude is not within the valid'
-                u' range (180)'))
+                u' range (±180)'))
         return value
 
     class Meta:
         model = geo
 
-class hCardForm(forms.ModelForm):
+class LocationAwareForm(forms.ModelForm):
+    """
+    Used in concert with models derived from the LocationAwareMicroformat model.
+    This form makes sure that the geo information is valid.
+    """
+    def clean(self):
+        """
+        Checks if you have one of Long or Lat you must have the other
+        """
+        super(LocationAwareForm, self).clean()
+        cleaned_data = self.cleaned_data
+        # Make sure we have a longitude and latitude
+        lat = cleaned_data.get("latitude", False)
+        long = cleaned_data.get("longitude", False)
+        if long and not lat:
+            self._errors['longitude'] = ErrorList([_("You must supply both a"\
+                    " longitude and latitude")])
+            del cleaned_data['longitude']
+        if lat and not long: 
+            self._errors['latitude'] = ErrorList([_("You must supply both a"\
+                    " longitude and latitude")])
+            del cleaned_data['latitude']
+        return cleaned_data
+
+    def clean_latitude(self):
+        """
+        ±90
+        """
+        value = self.cleaned_data.get('latitude', False)
+        if value:
+            if value < -90.0 or value > 90.0:
+                raise forms.ValidationError(_(u'Latitude is not within the valid'
+                    u' range (±90)'))
+        return value
+
+    def clean_longitude(self):
+        """
+        ±180
+        """
+        value = self.cleaned_data.get('longitude', False)
+        if value:
+            if value < -180.0 or value > 180.0:
+                raise forms.ValidationError(_(u'Longitude is not within the valid'
+                    u' range (±180)'))
+        return value
+
+class hCardForm(LocationAwareForm):
     """
     A simple form to use for gathering basic information for an hCard. Use in
     conjunction with the AdrForm, OrgForm, EmailForm and TelForm to build
@@ -92,18 +138,62 @@ class hCardForm(forms.ModelForm):
 
     http://microformats.org/code/hcard/creator
     """
-    def __init__(self, *args, **kwargs): 
-        super(hCardForm, self).__init__(*args, **kwargs) 
-        self.fields['given_name'].required = True
+    def clean(self):
+        """
+        Checks you have something useful to use as fn
+        """
+        super(hCardForm, self).clean()
+        cleaned_data = self.cleaned_data
 
+        # Some minimum fields needed to create a fn
+        org = cleaned_data.get('org', False)
+        given_name = cleaned_data.get('given_name', False)
+        family_name = cleaned_data.get('family_name', False)
+        nickname = cleaned_data.get('nickname', False)
+
+        # What the following if statement means:
+        # if the user hasn't supplied either and organization name or provided
+        # at least a nickname or a given name then raise an error
+        if not (org or nickname or given_name):
+            raise forms.ValidationError("You must supply some sort of namimg"\
+                    " information (given name or nickname"\
+                    " or an organization name)")
+        return cleaned_data
+    
     class Meta:
         model = hCard
-        fields = [
-                'given_name', 
-                'additional_name',
-                'family_name',
-                'url'
+
+class hCalForm(LocationAwareForm):
+    """
+    A simple form for gathering information for an hCalendar event. Inspired by
+    the form found here:
+
+    http://microformats.org/code/hcalendar/creator
+    """
+    class Meta:
+        model = hCalendar
+        exclude = [
+                'attendees',
+                'contacts',
+                'organizers',
                 ]
+
+class hReviewForm(LocationAwareForm):
+    """
+    A simple form for gathering information for an hReview microformat. Inspired
+    by the form found here:
+
+    http://microformats.org/code/hreview/creator
+    """
+    class Meta:
+        model = hReview
+
+class hListingForm(LocationAwareForm):
+    """
+    A simple form for gathering information for an hListing microforat.
+    """
+    class Meta:
+        model = hListing
 
 class AdrForm(forms.ModelForm):
     """
@@ -181,20 +271,3 @@ class TelForm(forms.ModelForm):
     class Meta:
         model = tel 
         exclude = ['hcard']
-
-class hCalForm(forms.ModelForm):
-    """
-    A simple form for gathering information for an hCalendar event. Inspired by
-    the form found here:
-
-    http://microformats.org/code/hcalendar/creator
-    """
-    class Meta:
-        model = hCalendar
-        exclude = [
-                'adr',
-                'attendees',
-                'contacts',
-                'organizers',
-                'tz'
-                ]

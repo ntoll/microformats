@@ -1,0 +1,33 @@
+{% load i18n %}
+<div class="hlisting">
+    <p>
+        <span class="item">
+        {% if instance.item_url %}<a href="{{instance.item_url}}" class="url">{% endif %}
+            <span class="fn">{{instance.item_fn}}</span>
+        {% if instance.item_url %}</a>{% endif %}
+        </span>
+        <span class="{{instance.listing_action}}">{{instance.get_listing_action_display}}</span>
+        {% if instance.dtlisted %}(<abbr class="dtlisted" title="{{instance.dtlisted.isoformat}}">{{instance.dtlisted|date:"D d M Y"}}</abbr>){% endif %}
+        {% if instance.summary %}<p class="summary">{{instance.summary}}</p>{% endif %}
+        <p class="description">{{instance.description}}</p>
+        <div class="location vcard">
+        {% include adr_microformat_template %}
+        </div>
+        {% if instance.dtexpired %}
+        <p>{% trans "Available from: " %}<abbr class="dtexpired" title="{{instance.dtexpired.isoformat}}">{{instance.dtexpired|date:"D d M Y"}}</abbr></p>
+        {% endif %}
+        {% if instance.price %}
+        <p>{% trans "Price: " %}<span class="price">{{instance.price}}</span></p>
+        {% endif %}
+        <div class="lister vcard">
+            <p>{% blocktrans %}
+            For more information, please contact
+            {% if instance.lister_url %}<a href="{{instance.lister_url}}" class="url">{% endif %}
+                <span class="fn">{{instance.lister_fn}}</span>
+            {% if instance.lister_url %}</a>{% endif %}
+            {% if instance.lister_email %}<a href="mailto:{{instance.lister_email}}" class="email">{{instance.lister_email}}</a>{% endif %}
+            {% if instance.lister_tel %}<span class="tel"><span class="value">{{instance.lister_tel}}</span></span>{% endif %}
+            {% endblocktrans %}</p>
+        </div>
+    </p>
+</div>

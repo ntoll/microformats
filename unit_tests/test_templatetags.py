@@ -14,6 +14,7 @@ import os
 from django.test.client import Client
 from django.test import TestCase
 from django.template import Context, Template
+from django.template.loader import get_template
 from django.contrib.auth.models import User
 
 # project
@@ -40,43 +41,25 @@ class TemplateTagsTestCase(TestCase):
             g.save()
             # With no arg
             result = geo(g, autoescape=True)
-            expected = u'<div class="geo">&nbsp;'\
-                    u'<abbr class="latitude" title="37.408183">'\
-                    u'N 37° 24.491'\
-                    u'</abbr>&nbsp;'\
-                    u'<abbr class="longitude" title="-122.13855">'\
-                    u'W 122° 08.313'\
-                    u'</abbr></div>'
+            expected = u'''\n<div class="geo">\n    <abbr class="latitude" title="37.408183">\n    N 37\xb0 24.491\n    </abbr>&nbsp;\n    <abbr class="longitude" title="-122.13855">\n    W 122\xb0 08.313\n    </abbr>\n</div>\n'''
             self.assertEquals(expected, result) 
             # With an arg
             result = geo(g, arg="Geo", autoescape=True)
-            expected = u'<div class="geo">Geo&nbsp;'\
-                    u'<abbr class="latitude" title="37.408183">'\
-                    u'N 37° 24.491'\
-                    u'</abbr>&nbsp;'\
-                    u'<abbr class="longitude" title="-122.13855">'\
-                    u'W 122° 08.313'\
-                    u'</abbr></div>'
+            expected = u'\n<div class="geo">\n    <abbr class="latitude" title="37.408183">\n    N 37\xb0 24.491\n    </abbr>&nbsp;\n    <abbr class="longitude" title="-122.13855">\n    W 122\xb0 08.313\n    </abbr>\n</div>\n'
             self.assertEquals(expected, result) 
             # An instance without any description fields
             g.latitude_description = ''
             g.longitude_description = ''
             g.save()
             result = geo(g, autoescape=True)
-            expected = u'<div class="geo">&nbsp;'\
-                    u'<abbr class="latitude" title="37.408183">'\
-                    u'37.408183'\
-                    u'</abbr>&nbsp;'\
-                    u'<abbr class="longitude" title="-122.13855">'\
-                    u'-122.13855'\
-                    u'</abbr></div>'
+            expected = u'\n<div class="geo">\n    <abbr class="latitude" title="37.408183">\n    37.408183\n    </abbr>&nbsp;\n    <abbr class="longitude" title="-122.13855">\n    -122.13855\n    </abbr>\n</div>\n'
             self.assertEquals(expected, result) 
             # Test Geocode fragments
-            result = geo(g.latitude, arg="lat", autoescape=True)
-            expected = u'<abbr class="latitude">37.408183</abbr>'
+            result = geo(g.latitude, arg="latitude", autoescape=True)
+            expected = u'<abbr class="latitude" title="37.408183">37.408183</abbr>'
             self.assertEquals(expected, result) 
-            result = geo(g.longitude, arg="long", autoescape=True)
-            expected = u'<abbr class="longitude">-122.13855</abbr>'
+            result = geo(g.longitude, arg="longitude", autoescape=True)
+            expected = u'<abbr class="longitude" title="-122.13855">-122.13855</abbr>'
             self.assertEquals(expected, result) 
 
         def test_fragment(self):
@@ -128,58 +111,21 @@ class TemplateTagsTestCase(TestCase):
             hc.family_name = 'Blogs'
             hc.honorific_suffix = 'PhD'
             hc.url = 'http://acme.com/'
+            hc.email_work = 'joe.blogs@acme.com'
+            hc.email_home = 'joe.blogs@home-isp.com'
+            hc.tel_work = '+44(0)1234 567876'
+            hc.tel_home = '+44(0)1543 234345'
+            hc.street_address = '5445 N. 27th Street'
+            hc.extended_address = ''
+            hc.locality = 'Milwaukee'
+            hc.region = 'WI'
+            hc.country_name = 'US'
+            hc.postal_code = '53209'
+            hc.title = 'Vice President'
+            hc.org = 'Acme Corp.'
             hc.save()
-            e = microformats.models.email()
-            e.hcard=hc
-            e.value = 'joe.blogs@acme.com'
-            e.save()
-            e2 = microformats.models.email()
-            e2.hcard=hc
-            e2.value = 'joe.blogs@home-isp.com'
-            e2.save()
-            tt1 = microformats.models.tel_type.objects.get(id=1)
-            tt2 = microformats.models.tel_type.objects.get(id=2)
-            tt3 = microformats.models.tel_type.objects.get(id=3)
-            tt4 = microformats.models.tel_type.objects.get(id=4)
-            tel1 = microformats.models.tel()
-            tel1.value = '+44(0)1234 567876'
-            tel1.hcard = hc
-            tel1.save()
-            tel1.types.add(tt1)
-            tel1.types.add(tt2)
-            tel1.save()
-            tel2 = microformats.models.tel()
-            tel2.value = '+44(0)7865 754345'
-            tel2.hcard = hc
-            tel2.save()
-            tel2.types.add(tt3)
-            tel2.types.add(tt4)
-            tel2.save()
-            at = microformats.models.adr_type.objects.get(id=5)
-            a = microformats.models.adr()
-            a.street_address = '5445 N. 27th Street'
-            a.extended_address = ''
-            a.locality = 'Milwaukee'
-            a.region = 'WI'
-            a.country_name = 'US'
-            a.postal_code = '53209'
-            a.hcard=hc
-            a.save()
-            a.types.add(at)
-            a.save()
-            t = microformats.models.title()
-            t.hcard = hc
-            t.name = 'Vice President'
-            t.save()
-            o = microformats.models.org()
-            o.hcard = hc
-            o.name = 'Acme Corp.'
-            o.unit = 'Production Resources'
-            o.title = t
-            o.primary = True
-            o.save()
             result = hcard(hc, autoescape=True)
-            expected = u'<div id="hcard_Mr_Joe_Arthur_Blogs_PhD" class="vcard"><div class="fn n"><a class="url" href="http://acme.com/"><span class="honorific_prefix">Mr</span>&nbsp;<span class="given-name">Joe</span>&nbsp;<span class="additional-name">Arthur</span>&nbsp;<span class="family-name">Blogs</span>&nbsp;<span class="honorific_suffix">PhD</span></a></div><span class="title">Vice President</span>&nbsp;<div class="org"><span class="organization-unit">Production Resources</span>,&nbsp;<span class="organization-name">Acme Corp.</span></div><a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a><br/><a class="email" href="mailto:joe.blogs@home-isp.com">joe.blogs@home-isp.com</a><br/><div class="adr"><div><abbr class="type" title="home">Home</abbr>&nbsp;Address</div><div class="street-address">5445 N. 27th Street</div><span class="locality">Milwaukee</span>&nbsp;<span class="region">WI</span>&nbsp;<span class="postal-code">53209</span>&nbsp;<span class="region">United States</span></div><div class="tel"><span class="value">+44(0)1234 567876</span>&nbsp;[&nbsp;<abbr class="type" title="voice">Voice</abbr>&nbsp<abbr class="type" title="home">Home</abbr>&nbsp]</div><div class="tel"><span class="value">+44(0)7865 754345</span>&nbsp;[&nbsp;<abbr class="type" title="msg">Message Service</abbr>&nbsp<abbr class="type" title="work">Work</abbr>&nbsp]</div></div>'
+            expected = u'\n<div id="hcard_1" class="vcard">\n    <div class="fn n">\n        <a href="http://acme.com/" class="url">\n        \n            <span class="honorific-prefix">Mr</span>\n            <span class="given-name">Joe</span>\n            <span class="additional-name">Arthur</span>\n            <span class="family-name">Blogs</span>\n            <span class="honorific-suffix">PhD</span>\n        \n        </a>\n    </div>\n    \n    <span class="title">Vice President</span>\n    \n    <div class="org">Acme Corp.</div>\n    \n    \n    <a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a> [work]<br/> \n    <a class="email" href="mailto:joe.blogs@home-isp.com">joe.blogs@home-isp.com</a> [home]<br/> \n    \n<div class="adr">\n    <div class="street-address">5445 N. 27th Street</div>\n    \n    <span class="locality">Milwaukee</span>&nbsp;\n    <span class="region">WI</span>&nbsp;\n    <span class="postal-code">53209</span>&nbsp;\n    <span class="country-name">United States</span>\n</div>\n\n    <div class="tel"><span class="value">+44(0)1234 567876</span> [<abbr class="type" title="work">work</abbr>]</div>\n    <div class="tel"><span class="value">+44(0)1543 234345</span> [<abbr class="type" title="home">home</abbr>]</div>\n    \n</div>\n'
             self.assertEquals(expected, result)
             # Lets make sure we can get a valid hCard when it is for an
             # organisation
@@ -190,36 +136,39 @@ class TemplateTagsTestCase(TestCase):
             hc.honorific_suffix = ''
             hc.save()
             result = hcard(hc, autoescape=True)
-            expected = u'<div id="hcard_Production_Resources,_Acme_Corp." class="vcard"><div class="fn n"><a class="url" href="http://acme.com/"><span class="org">Acme Corp.</span></a></div><a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a><br/><a class="email" href="mailto:joe.blogs@home-isp.com">joe.blogs@home-isp.com</a><br/><div class="adr"><div><abbr class="type" title="home">Home</abbr>&nbsp;Address</div><div class="street-address">5445 N. 27th Street</div><span class="locality">Milwaukee</span>&nbsp;<span class="region">WI</span>&nbsp;<span class="postal-code">53209</span>&nbsp;<span class="region">United States</span></div><div class="tel"><span class="value">+44(0)1234 567876</span>&nbsp;[&nbsp;<abbr class="type" title="voice">Voice</abbr>&nbsp<abbr class="type" title="home">Home</abbr>&nbsp]</div><div class="tel"><span class="value">+44(0)7865 754345</span>&nbsp;[&nbsp;<abbr class="type" title="msg">Message Service</abbr>&nbsp<abbr class="type" title="work">Work</abbr>&nbsp]</div></div>'
+            expected = u'\n<div id="hcard_1" class="vcard">\n    <div class="fn n">\n        <a href="http://acme.com/" class="url">\n        \n        <span class="org">Acme Corp.</span>\n        \n        </a>\n    </div>\n    \n    <a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a> [work]<br/> \n    <a class="email" href="mailto:joe.blogs@home-isp.com">joe.blogs@home-isp.com</a> [home]<br/> \n    \n<div class="adr">\n    <div class="street-address">5445 N. 27th Street</div>\n    \n    <span class="locality">Milwaukee</span>&nbsp;\n    <span class="region">WI</span>&nbsp;\n    <span class="postal-code">53209</span>&nbsp;\n    <span class="country-name">United States</span>\n</div>\n\n    <div class="tel"><span class="value">+44(0)1234 567876</span> [<abbr class="type" title="work">work</abbr>]</div>\n    <div class="tel"><span class="value">+44(0)1543 234345</span> [<abbr class="type" title="home">home</abbr>]</div>\n    \n</div>\n'
             self.assertEquals(expected, result)
             # No address, org, url and email and minimum telephone information
-            a.delete() 
             hc.url = ''
-            e.delete()
-            e2.delete()
+            hc.email_work = ''
+            hc.email_home = ''
+            hc.street_address = ''
+            hc.extended_address = ''
+            hc.locality = ''
+            hc.region = ''
+            hc.country_name = ''
+            hc.postal_code = ''
+            hc.title = ''
+            hc.org = ''
+            hc.url = ''
             hc.honorific_prefix = 'Mr'
             hc.given_name = 'Joe'
             hc.additional_name = 'Arthur'
             hc.family_name = 'Blogs'
             hc.honorific_suffix = 'PhD'
             hc.save()
-            tel1.types.clear()
-            tel1.save()
-            tel2.types.clear()
-            tel2.save()
-            o.delete()
             result = hcard(hc, autoescape=True)
-            expected = u'<div id="hcard_Mr_Joe_Arthur_Blogs_PhD" class="vcard"><div class="fn n"><span class="honorific_prefix">Mr</span>&nbsp;<span class="given-name">Joe</span>&nbsp;<span class="additional-name">Arthur</span>&nbsp;<span class="family-name">Blogs</span>&nbsp;<span class="honorific_suffix">PhD</span></div><div class="tel"><span class="value">+44(0)1234 567876</span></div><div class="tel"><span class="value">+44(0)7865 754345</span></div></div>'
+            expected = u'\n<div id="hcard_1" class="vcard">\n    <div class="fn n">\n        \n        \n            <span class="honorific-prefix">Mr</span>\n            <span class="given-name">Joe</span>\n            <span class="additional-name">Arthur</span>\n            <span class="family-name">Blogs</span>\n            <span class="honorific-suffix">PhD</span>\n        \n        \n    </div>\n    \n    \n    \n    \n     \n     \n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n    <div class="tel"><span class="value">+44(0)1234 567876</span> [<abbr class="type" title="work">work</abbr>]</div>\n    <div class="tel"><span class="value">+44(0)1543 234345</span> [<abbr class="type" title="home">home</abbr>]</div>\n    \n</div>\n'
             self.assertEquals(expected, result)
             # Absolute minimum
             hc.honorific_prefix = ''
             hc.additional_name = ''
             hc.honorific_suffix = ''
-            hc.save()
-            tel1.delete()
-            tel2.delete()
+	    hc.tel_work = ''
+	    hc.tel_home = ''
+	    hc.save()
             result = hcard(hc, autoescape=True)
-            expected = u'<div id="hcard_Joe_Blogs" class="vcard"><div class="fn n"><span class="given-name">Joe</span>&nbsp;<span class="family-name">Blogs</span>&nbsp;</div></div>'
+            expected = u'\n<div id="hcard_1" class="vcard">\n    <div class="fn n">\n        \n        \n            \n            <span class="given-name">Joe</span>\n            \n            <span class="family-name">Blogs</span>\n            \n        \n        \n    </div>\n    \n    \n    \n    \n     \n     \n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n    \n    \n    \n</div>\n'
             self.assertEquals(expected, result)
 
         def test_adr(self):
@@ -239,13 +188,13 @@ class TemplateTagsTestCase(TestCase):
             a.types.add(at)
             a.save()
             result = adr(a, autoescape=True)
-            expected = u'<div class="adr"><div><abbr class="type" title="home">Home</abbr>&nbsp;Address</div><div class="street-address">Flat 29a</div><div class="extended-address">123 Somewhere Street</div><span class="locality">Townsville</span>&nbsp;<span class="region">Countyshire</span>&nbsp;<span class="postal-code">CS23 6YT</span>&nbsp;<span class="region">United Kingdom</span></div>'
+            expected = u'\n<div class="adr">\n    <div class="street-address">Flat 29a</div>\n    <div class="extended-address">123 Somewhere Street</div>\n    <span class="locality">Townsville</span>&nbsp;\n    <span class="region">Countyshire</span>&nbsp;\n    <span class="postal-code">CS23 6YT</span>&nbsp;\n    <span class="country-name">United Kingdom</span>\n</div>\n'
             self.assertEquals(expected, result)
             # Without type
             a.types.clear()
             a.save()
             result = adr(a, autoescape=True)
-            expected = u'<div class="adr"><div class="street-address">Flat 29a</div><div class="extended-address">123 Somewhere Street</div><span class="locality">Townsville</span>&nbsp;<span class="region">Countyshire</span>&nbsp;<span class="postal-code">CS23 6YT</span>&nbsp;<span class="region">United Kingdom</span></div>'
+            expected = u'\n<div class="adr">\n    <div class="street-address">Flat 29a</div>\n    <div class="extended-address">123 Somewhere Street</div>\n    <span class="locality">Townsville</span>&nbsp;\n    <span class="region">Countyshire</span>&nbsp;\n    <span class="postal-code">CS23 6YT</span>&nbsp;\n    <span class="country-name">United Kingdom</span>\n</div>\n'
             self.assertEquals(expected, result)
 
         def test_hcal(self):
@@ -271,13 +220,13 @@ class TemplateTagsTestCase(TestCase):
             hc.adr = a
             hc.save()
             result = hcal(hc, autoescape=True)
-            expected = u'<div id="hcalendar_Important_Meeting" class="vevent"><a href="http://www.bbc.co.uk/" class="url"><abbr title="2009-04-11T13:30:00" class="dtstart">Sat Apr 11 2009, 01:30PM</abbr>&nbsp;-&nbsp;<abbr title="2009-04-11T15:30:00" class="dtend">03:30PM</abbr>:&nbsp;<span class="summary">Important Meeting</span> at <span class="location">BBC in London</span></a><div class="adr"><div class="street-address">Broadcasting House</div><div class="extended-address">Portland Place</div><span class="locality">London</span>&nbsp;<span class="postal-code">W1A 1AA</span>&nbsp;<span class="region">United Kingdom</span></div><p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></div>'
+            expected = u'\n<div id="hcalendar_1" class="vevent">\n    <a href="http://www.bbc.co.uk/" class="url">\n        \n        <abbr title="2009-04-11T13:30:00" class="dtstart">Sat 11 Apr 2009 1:30 p.m.</abbr>\n        \n        \n            &nbsp;-&nbsp;\n            \n            <abbr title="2009-04-11T15:30:00" class="dtend">All day event</abbr>\n            \n        \n        :&nbsp;\n        <span class="summary">Important Meeting</span>\n         at <span class="location">BBC in London</span>\n    </a>\n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n    <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>    \n</div>\n'
             self.assertEquals(expected, result)
             # Make sure things render correctly *if* all_day_event = True
             hc.all_day_event = True
             hc.save()
             result = hcal(hc, autoescape=True)
-            expected = u'<div id="hcalendar_Important_Meeting" class="vevent"><a href="http://www.bbc.co.uk/" class="url"><abbr title="2009-04-11T13:30:00" class="dtstart">Sat Apr 11 2009</abbr>&nbsp;-&nbsp;<abbr title="2009-04-11T15:30:00" class="dtend">All day event</abbr>:&nbsp;<span class="summary">Important Meeting</span> at <span class="location">BBC in London</span></a><div class="adr"><div class="street-address">Broadcasting House</div><div class="extended-address">Portland Place</div><span class="locality">London</span>&nbsp;<span class="postal-code">W1A 1AA</span>&nbsp;<span class="region">United Kingdom</span></div><p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></div>'
+            expected = u'\n<div id="hcalendar_1" class="vevent">\n    <a href="http://www.bbc.co.uk/" class="url">\n        \n        <abbr title="2009-04-11T13:30:00" class="dtstart">Sat 11 Apr 2009</abbr>\n        \n        \n            &nbsp;-&nbsp;\n            \n            <abbr title="2009-04-11T15:30:00" class="dtend">All day event</abbr>\n            \n        \n        :&nbsp;\n        <span class="summary">Important Meeting</span>\n         at <span class="location">BBC in London</span>\n    </a>\n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n    <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>    \n</div>\n'
             self.assertEquals(expected, result)
             hc.all_day_event = False
             hc.save()
@@ -289,7 +238,7 @@ class TemplateTagsTestCase(TestCase):
             hc.dtend = datetime.datetime(2009, 4, 15, 15, 30)
             hc.save()
             result = hcal(hc, autoescape=True)
-            expected = u'<div id="hcalendar_Important_Meeting" class="vevent"><abbr title="2009-04-11T13:30:00" class="dtstart">Sat Apr 11 2009, 01:30PM</abbr>&nbsp;-&nbsp;<abbr title="2009-04-15T15:30:00" class="dtend">Wed Apr 15 2009, 03:30PM</abbr>:&nbsp;<span class="summary">Important Meeting</span></div>'
+            expected = u'\n<div id="hcalendar_1" class="vevent">\n    \n        \n        <abbr title="2009-04-11T13:30:00" class="dtstart">Sat 11 Apr 2009 1:30 p.m.</abbr>\n        \n        \n            &nbsp;-&nbsp;\n            \n            <abbr title="2009-04-15T15:30:00" class="dtend">3:30 p.m.</abbr>\n            \n        \n        :&nbsp;\n        <span class="summary">Important Meeting</span>\n        \n    \n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n        \n</div>\n'
             self.assertEquals(expected, result)
             # Absolute minimum
             hc.dtend = None
@@ -297,7 +246,7 @@ class TemplateTagsTestCase(TestCase):
             result = hcal(hc, autoescape=True)
             # We probably want to separate the date and time of dtstart and
             # dtend so we don't default to midnight... ToDo: Fix date/time
-            expected = u'<div id="hcalendar_Important_Meeting" class="vevent"><abbr title="2009-04-15T00:00:00" class="dtstart">Wed Apr 15 2009, 12:00AM</abbr>:&nbsp;<span class="summary">Important Meeting</span></div>'
+            expected = u'\n<div id="hcalendar_1" class="vevent">\n    \n        \n        <abbr title="2009-04-15T00:00:00" class="dtstart">Wed 15 Apr 2009 midnight</abbr>\n        \n        \n        :&nbsp;\n        <span class="summary">Important Meeting</span>\n        \n    \n    \n<div class="adr">\n    \n    \n    \n    \n    \n    \n</div>\n\n        \n</div>\n'
             self.assertEquals(expected, result)
 
         def test_xfn(self):
@@ -342,56 +291,19 @@ class TemplateTagsTestCase(TestCase):
             hc.family_name = 'Blogs'
             hc.honorific_suffix = 'PhD'
             hc.url = 'http://acme.com/'
+            hc.email_work = 'joe.blogs@acme.com'
+            hc.email_home = 'joeblogs2000@home-isp.com'
+            hc.tel_work = '+44(0)1234 567890'
+            hc.tel_home = '+44(0)1324 234123'
+            hc.street_address = '5445 N. 27th Street'
+            hc.extended_address = ''
+            hc.locality = 'Milwaukee'
+            hc.region = 'WI'
+            hc.country_name = 'US'
+            hc.postal_code = '53209'
+            hc.org = "Acme Corp."
+            hc.title = 'Vice President'
             hc.save()
-            e = microformats.models.email()
-            e.hcard=hc
-            e.value = 'joe.blogs@acme.com'
-            e.save()
-            e2 = microformats.models.email()
-            e2.hcard=hc
-            e2.value = 'joe.blogs@home-isp.com'
-            e2.save()
-            tt1 = microformats.models.tel_type.objects.get(id=1)
-            tt2 = microformats.models.tel_type.objects.get(id=2)
-            tt3 = microformats.models.tel_type.objects.get(id=3)
-            tt4 = microformats.models.tel_type.objects.get(id=4)
-            tel1 = microformats.models.tel()
-            tel1.value = '+44(0)1234 567876'
-            tel1.hcard = hc
-            tel1.save()
-            tel1.types.add(tt1)
-            tel1.types.add(tt2)
-            tel1.save()
-            tel2 = microformats.models.tel()
-            tel2.value = '+44(0)7865 754345'
-            tel2.hcard = hc
-            tel2.save()
-            tel2.types.add(tt3)
-            tel2.types.add(tt4)
-            tel2.save()
-            at = microformats.models.adr_type.objects.get(id=5)
-            a = microformats.models.adr()
-            a.street_address = '5445 N. 27th Street'
-            a.extended_address = ''
-            a.locality = 'Milwaukee'
-            a.region = 'WI'
-            a.country_name = 'US'
-            a.postal_code = '53209'
-            a.hcard=hc
-            a.save()
-            a.types.add(at)
-            a.save()
-            t = microformats.models.title()
-            t.hcard = hc
-            t.name = 'Vice President'
-            t.save()
-            o = microformats.models.org()
-            o.hcard = hc
-            o.name = 'Acme Corp.'
-            o.unit = 'Production Resources'
-            o.title = t
-            o.primary = True
-            o.save()
             hcl = microformats.models.hCalendar()
             hcl.summary = 'Important Meeting'
             hcl.location = 'BBC in London'
@@ -428,37 +340,15 @@ class TemplateTagsTestCase(TestCase):
             hc2.family_name = 'Fletcher'
             hc2.honorific_suffix = 'MA(cantab)'
             hc2.url = 'http://lso.co.uk/'
+            hc2.tel_work = '+44(0)1234 567456'
+            hc2.street_address = 'The Barbican Centre'
+            hc2.extended_address = 'Silk Street'
+            hc2.locality = 'London'
+            hc2.country_name = 'GB'
+            hc2.postal_code = 'EC2Y 8DS'
+            hc2.org = 'London Symphony Orchestra'
+            hc2.title = 'Principal Tuba Player'
             hc2.save()
-            tel3 = microformats.models.tel()
-            tel3.value = '+44(0)1234 567876'
-            tel3.hcard = hc2
-            tel3.save()
-            tel3.types.add(tt1)
-            tel3.types.add(tt2)
-            tel3.save()
-            at1 = microformats.models.adr_type.objects.get(id=6)
-            a1 = microformats.models.adr()
-            a1.street_address = 'Barbican Centre'
-            a1.extended_address = 'Silk Street'
-            a1.locality = 'London'
-            a1.region = ''
-            a1.country_name = 'GB'
-            a1.postal_code = 'EC2Y 8DS'
-            a1.save()
-            a1.types.add(at1)
-            a1.hcard=hc2
-            a1.save()
-            t2 = microformats.models.title()
-            t2.hcard = hc2
-            t2.name = 'Principal Tuba Player'
-            t2.save()
-            o2 = microformats.models.org()
-            o2.hcard = hc2
-            o2.name = 'The London Symphony Orchestra'
-            o2.unit = ''
-            o2.title = t2
-            o2.primary = True
-            o2.save()
             hcl2 = microformats.models.hCalendar()
             hcl2.summary = 'Operation Overlord'
             hcl2.location = 'Normandy, France'
@@ -467,102 +357,13 @@ class TemplateTagsTestCase(TestCase):
             hcl2.dtend = datetime.datetime(1944, 8, 30)
             hcl2.description = 'You are about to embark upon the Great Crusade, toward which we have striven these many months. The eyes of the world are upon you. The hopes and prayers of liberty-loving people everywhere march with you. In company with our brave Allies and brothers-in-arms on other Fronts, you will bring about the destruction of the German war machine, the elimination of Nazi tyranny over the oppressed peoples of Europe, and security for ourselves in a free world.'
             hcl2.save()
-            template = Template("""{% load microformat_extras %}
-            <html>
-                <head>
-                    <title>Testing Microformats</title>
-                    <meta http-equiv="content-type" content="text/html;
-                    charset=utf-8" />
-                    <script type="text/javascript"
-                    src="jquery-1.2.6.min.js"></script>
-                    <script type="text/javascript" src="oomphx.js"></script>
-                    <link rel="stylesheet" href="ufstyle.css" type="text/css"
-                    media="screen" />
-
-                </head>
-                <body>
-                    <div id="ufContainer">
-                    <div id='ufTitle'>
-                    <h1>Microformat Test Card</h1>
-                    </div>
-                    <div id='ufContent'>
-                    <p>
-                    This page contains examples of microformats as rendered by
-                    the microformats Django application. <a
-                    href="http://microformats.org/">Microformats</a> are a means
-                    of adding semantic information that is
-                    <em>both</em> human and machine readable to a web-site. In
-                    order to work with Microformats you need to use a toolkit
-                    such as <a href="http://visitmix.com/Lab/oomph">Oomph</a>
-                    (included as a javascript plugin with this page - if you're
-                    online you should see it's logo in the top left hand side of
-                    the screen) or the <a
-                    href="https://addons.mozilla.org/en-US/firefox/addon/4106">Operator
-                    Add-on</a> for Firefox (that supports more types of
-                    microformat).
-                    </p>
-
-                    <h2>Geo</h2>
-                    {{loc|geo:"A Geo-location"}}
-
-                    <h2>hCard</h2>
-                    {{contact|hcard}}
-
-                    <h2>hCalendar</h2>
-                    {{event|hcal}}
-
-                    <h2>XFN</h2>
-                    {{person|xfn}}
-
-                    <h2>Some Free Text Examples</h2>
-
-                    <h3>Geo</h3>
-                    <p class="geo">We spent a long time trying to find Fred's
-                    house using the GPS to lead us to
-                    {{loc2.latitude|geo:"lat"}}/
-                    {{loc2.longitude|geo:"long"}}, but we got there in the end.
-                    </p>
-
-                    <h3>hCard</h3>
-                    <p class="vcard">
-                    Whilst researching my programme notes for the upcoming
-                    performance of the Vaughan-William's Tuba Concerto, I found
-                    a recording with <span
-                    class="fn">{{c2.given_name|hcard:"given-name"}}
-                    {{c2.family_name|hcard:"family-name"}}</span> as the
-                    soloist. He was the {{lso.title|hcard:"role"}} in the
-                    {{lso.name|hcard:"org"}}. More information can be found by
-                    contacting their offices at
-                    <span clas="adr">
-                    {{lso_adr.street_address|hcard:"street-address"}} in
-                    {{lso_adr.locality|hcard:"locality"}}</span>.
-                    </p>
-
-                    <h3>hCalendar</h3>
-                    <p class="vevent">
-                    In the early hours of 
-                    {{event2.dtstart|hcal:"dtstart %B %d %Y"}}
-                    {{event2.summary|hcal:"summary"}} commenced throughout 
-                    {{event2.location|hcal:"location"}}. The aims of this
-                    operation were summarised thus,
-                    <q>{{event2.description|hcal:"description"}}</q>
-                    </p>
-                    </div>
-                    <div id="ufFooter">
-                    &copy; 2009 <a href="http://ntoll.org/">Nicholas H.Tollervey</a>
-                    </div>
-                    </div>
-                </body>
-            </html>""")
-            
+            template = get_template('test.html')
             data = {
                     'contact': hc,
                     'loc': g,
                     'event': hcl, 
                     'person': x,
                     'c2': hc2,
-                    'lso': o2,
-                    'lso_adr': a1,
                     'loc2': g2,
                     'event2': hcl2
                     }

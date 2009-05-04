@@ -35,11 +35,11 @@ class ModelTestCase(TestCase):
             g.save()
             self.assertEquals('lat 37.408183 long -122.13855', g.__unicode__())
 
-        def test_hCard(self):
+        def test_hCardComplete(self):
             """
             Check that the n() and fn() methods return the correct values
             """
-            hc = hCard()
+            hc = hCardComplete()
             hc.honorific_prefix = 'Mr'
             hc.given_name = 'Joe'
             hc.additional_name = 'Arthur'
@@ -134,7 +134,7 @@ class ModelTestCase(TestCase):
             """ 
             Make sure the string representation of the organization looks correct
             """
-            hc = hCard()
+            hc = hCardComplete()
             hc.given_name = 'test'
             hc.save()
             o = org()

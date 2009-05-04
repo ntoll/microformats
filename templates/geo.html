@@ -1,0 +1,9 @@
+{% load i18n %}
+<div class="geo">
+    <abbr class="latitude" title="{{instance.latitude}}">
+    {% if instance.latitude_description %}{{instance.latitude_description}}{% else %}{{instance.latitude}}{% endif %}
+    </abbr>&nbsp;
+    <abbr class="longitude" title="{{instance.longitude}}">
+    {% if instance.longitude_description %}{{instance.longitude_description}}{% else %}{{instance.longitude}}{% endif %}
+    </abbr>
+</div>

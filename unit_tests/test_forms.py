@@ -83,17 +83,44 @@ class FormTestCase(TestCase):
 
         def test_hcard(self):
             """
-            Makes sure the given name is required 
+            Makes sure if long or lat are supplied then so should the other, and
+            that it validates something useful for the fn
             """
-            # Safe case
+            # Long and lat
             data = {
                     'given_name': 'John',
+                    'longitude': '-122.13855'
                     }
             f = hCardForm(data)
-            self.assertEquals(True, f.is_valid())
+            # No latitude
+            self.assertEquals(False, f.is_valid())
+            self.assertEquals(1, len(f.errors['longitude']))
+            data['longitude'] = ''
+            data['latitude'] = '37.408183'
+            f = hCardForm(data)
+            # No longitude
+            self.assertEquals(False, f.is_valid())
+            self.assertEquals(1, len(f.errors['latitude']))
+            data['longitude'] = '-122.13855'
+            # No fn related data
             data['given_name'] = ''
             f = hCardForm(data)
             self.assertEquals(False, f.is_valid())
+            self.assertEquals(1, len(f.errors['__all__']))
+            # given name is valid
+            data['given_name'] = 'John'
+            f = hCardForm(data)
+            self.assertEquals(True, f.is_valid())
+            # nickname is valid
+            data['given_name'] = ''
+            data['nickname'] = 'John'
+            f = hCardForm(data)
+            self.assertEquals(True, f.is_valid())
+            # as is org
+            data['nickname'] = ''
+            data['org'] = 'Acme Corp.'
+            f = hCardForm(data)
+            self.assertEquals(True, f.is_valid())
 
         def test_adr(self):
             """

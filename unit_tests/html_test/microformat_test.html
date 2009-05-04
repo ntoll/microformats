@@ -1,87 +1,152 @@
 
-            <html>
-                <head>
-                    <title>Testing Microformats</title>
-                    <meta http-equiv="content-type" content="text/html;
-                    charset=utf-8" />
-                    <script type="text/javascript"
-                    src="jquery-1.2.6.min.js"></script>
-                    <script type="text/javascript" src="oomphx.js"></script>
-                    <link rel="stylesheet" href="ufstyle.css" type="text/css"
-                    media="screen" />
+<html>
+<head>
+<title>Testing Microformats</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="oomphx.js"></script>
+<link rel="stylesheet" href="ufstyle.css" type="text/css" media="screen" />
+</head>
+<body>
+<div id="ufContainer">
+<div id='ufTitle'>
+<h1>Microformat Test Card</h1>
+</div>
+<div id='ufContent'>
+<p> This page contains examples of microformats as rendered by the microformats 
+Django application. <a href="http://microformats.org/">Microformats</a> are a 
+means of adding semantic information that is <em>both</em> human and machine 
+readable to a web-site. In order to work with Microformats you need to use a 
+toolkit such as <a href="http://visitmix.com/Lab/oomph">Oomph</a> (included as 
+a javascript plugin with this page - if you're online you should see it's logo 
+in the top left hand side of the screen) or the 
+<a href="https://addons.mozilla.org/en-US/firefox/addon/4106">Operator 
+Add-on</a> for Firefox (that supports more types of microformat).</p>
 
-                </head>
-                <body>
-                    <div id="ufContainer">
-                    <div id='ufTitle'>
-                    <h1>Microformat Test Card</h1>
-                    </div>
-                    <div id='ufContent'>
-                    <p>
-                    This page contains examples of microformats as rendered by
-                    the microformats Django application. <a
-                    href="http://microformats.org/">Microformats</a> are a means
-                    of adding semantic information that is
-                    <em>both</em> human and machine readable to a web-site. In
-                    order to work with Microformats you need to use a toolkit
-                    such as <a href="http://visitmix.com/Lab/oomph">Oomph</a>
-                    (included as a javascript plugin with this page - if you're
-                    online you should see it's logo in the top left hand side of
-                    the screen) or the <a
-                    href="https://addons.mozilla.org/en-US/firefox/addon/4106">Operator
-                    Add-on</a> for Firefox (that supports more types of
-                    microformat).
-                    </p>
+<h2>Geo</h2>
+<!-- loc is an instance of the geo uFormat -->
 
-                    <h2>Geo</h2>
-                    <div class="geo">A Geo-location&nbsp;<abbr class="latitude" title="37.408183">N 37° 24.491</abbr>&nbsp;<abbr class="longitude" title="-122.13855">W 122° 08.313</abbr></div>
+<div class="geo">
+    <abbr class="latitude" title="37.408183">
+    N 37° 24.491
+    </abbr>&nbsp;
+    <abbr class="longitude" title="-122.13855">
+    W 122° 08.313
+    </abbr>
+</div>
 
-                    <h2>hCard</h2>
-                    <div id="hcard_Mr_Joe_Arthur_Blogs_PhD" class="vcard"><div class="fn n"><a class="url" href="http://acme.com/"><span class="honorific_prefix">Mr</span>&nbsp;<span class="given-name">Joe</span>&nbsp;<span class="additional-name">Arthur</span>&nbsp;<span class="family-name">Blogs</span>&nbsp;<span class="honorific_suffix">PhD</span></a></div><span class="title">Vice President</span>&nbsp;<div class="org"><span class="organization-unit">Production Resources</span>,&nbsp;<span class="organization-name">Acme Corp.</span></div><a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a><br/><a class="email" href="mailto:joe.blogs@home-isp.com">joe.blogs@home-isp.com</a><br/><div class="adr"><div><abbr class="type" title="home">Home</abbr>&nbsp;Address</div><div class="street-address">5445 N. 27th Street</div><span class="locality">Milwaukee</span>&nbsp;<span class="region">WI</span>&nbsp;<span class="postal-code">53209</span>&nbsp;<span class="region">United States</span></div><div class="tel"><span class="value">+44(0)1234 567876</span>&nbsp;[&nbsp;<abbr class="type" title="voice">Voice</abbr>&nbsp<abbr class="type" title="home">Home</abbr>&nbsp]</div><div class="tel"><span class="value">+44(0)7865 754345</span>&nbsp;[&nbsp;<abbr class="type" title="msg">Message Service</abbr>&nbsp<abbr class="type" title="work">Work</abbr>&nbsp]</div></div>
 
-                    <h2>hCalendar</h2>
-                    <div id="hcalendar_Important_Meeting" class="vevent"><a href="http://www.bbc.co.uk/" class="url"><abbr title="2009-04-11T13:30:00" class="dtstart">Sat Apr 11 2009, 01:30PM</abbr>&nbsp;-&nbsp;<abbr title="2009-04-11T15:30:00" class="dtend">03:30PM</abbr>:&nbsp;<span class="summary">Important Meeting</span> at <span class="location">BBC in London</span></a><p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></div>
+<h2>hCard</h2>
+<!-- contact is an instance of hCard -->
 
-                    <h2>XFN</h2>
-                    <a href="http://twitter.com/ntoll" rel="colleague friend met">Nicholas Tollervey</a>
+<div id="hcard_1" class="vcard">
+    <div class="fn n">
+        <a href="http://acme.com/" class="url">
+        
+            <span class="honorific-prefix">Mr</span>
+            <span class="given-name">Joe</span>
+            <span class="additional-name">Arthur</span>
+            <span class="family-name">Blogs</span>
+            <span class="honorific-suffix">PhD</span>
+        
+        </a>
+    </div>
+    
+    <span class="title">Vice President</span>
+    
+    <div class="org">Acme Corp.</div>
+    
+    
+    <a class="email" href="mailto:joe.blogs@acme.com">joe.blogs@acme.com</a> [work]<br/> 
+    <a class="email" href="mailto:joeblogs2000@home-isp.com">joeblogs2000@home-isp.com</a> [home]<br/> 
+    
+<div class="adr">
+    <div class="street-address">5445 N. 27th Street</div>
+    
+    <span class="locality">Milwaukee</span>&nbsp;
+    <span class="region">WI</span>&nbsp;
+    <span class="postal-code">53209</span>&nbsp;
+    <span class="country-name">United States</span>
+</div>
 
-                    <h2>Some Free Text Examples</h2>
+    <div class="tel"><span class="value">+44(0)1234 567890</span> [<abbr class="type" title="work">work</abbr>]</div>
+    <div class="tel"><span class="value">+44(0)1324 234123</span> [<abbr class="type" title="home">home</abbr>]</div>
+    
+</div>
 
-                    <h3>Geo</h3>
-                    <p class="geo">We spent a long time trying to find Fred's
-                    house using the GPS to lead us to
-                    <abbr class="latitude">45.498677</abbr>/
-                    <abbr class="longitude">-73.57026</abbr>, but we got there in the end.
-                    </p>
 
-                    <h3>hCard</h3>
-                    <p class="vcard">
-                    Whilst researching my programme notes for the upcoming
-                    performance of the Vaughan-William's Tuba Concerto, I found
-                    a recording with <span
-                    class="fn"><span class="given-name">John</span>
-                    <span class="family-name">Fletcher</span></span> as the
-                    soloist. He was the <span class="role">Principal Tuba Player</span> in the
-                    <span class="org">The London Symphony Orchestra</span>. More information can be found by
-                    contacting their offices at
-                    <span clas="adr">
-                    <span class="street-address">Barbican Centre</span> in
-                    <span class="locality">London</span></span>.
-                    </p>
+<!-- event is an instance of hCalendar -->
+<h2>hCalendar</h2>
 
-                    <h3>hCalendar</h3>
-                    <p class="vevent">
-                    In the early hours of 
-                    <abbr class="dtstart" title="1944-06-06T00:00:00">June 06 1944</abbr>
-                    <span class="summary">Operation Overlord</span> commenced throughout 
-                    <span class="location">Normandy, France</span>. The aims of this
-                    operation were summarised thus,
-                    <q><span class="description">You are about to embark upon the Great Crusade, toward which we have striven these many months. The eyes of the world are upon you. The hopes and prayers of liberty-loving people everywhere march with you. In company with our brave Allies and brothers-in-arms on other Fronts, you will bring about the destruction of the German war machine, the elimination of Nazi tyranny over the oppressed peoples of Europe, and security for ourselves in a free world.</span></q>
-                    </p>
-                    </div>
-                    <div id="ufFooter">
-                    &copy; 2009 <a href="http://ntoll.org/">Nicholas H.Tollervey</a>
-                    </div>
-                    </div>
-                </body>
-            </html>
+<div id="hcalendar_1" class="vevent">
+    <a href="http://www.bbc.co.uk/" class="url">
+        
+        <abbr title="2009-04-11T13:30:00" class="dtstart">Sat 11 Apr 2009 1:30 p.m.</abbr>
+        
+        
+            &nbsp;-&nbsp;
+            
+            <abbr title="2009-04-11T15:30:00" class="dtend">All day event</abbr>
+            
+        
+        :&nbsp;
+        <span class="summary">Important Meeting</span>
+         at <span class="location">BBC in London</span>
+    </a>
+    
+<div class="adr">
+    
+    
+    
+    
+    
+    
+</div>
+
+    <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>    
+</div>
+
+
+<!-- person is an instance of XFN -->
+<h2>XFN</h2>
+<a href="http://twitter.com/ntoll" rel="colleague friend met">Nicholas Tollervey</a>
+
+<h2>Some Free Text Examples</h2>
+
+<!-- loc2 is another geo instance -->
+<h3>Geo</h3>
+<p class="geo">We spent a long time trying to find Fred's house using the GPS 
+to lead us to <abbr class="latitude" title="45.498677">45.498677</abbr> / 
+<abbr class="longitude" title="-73.57026">-73.57026</abbr>, but we got there in the end.
+</p>
+
+<!-- c2 is a second contact that is an hCard instance -->
+<h3>hCard</h3>
+<p class="vcard">
+Whilst researching my programme notes for the upcoming performance of the 
+Vaughan-William's Tuba Concerto, I found a recording with <span class="fn">
+<span class="given-name">John</span> <span class="family-name">Fletcher</span>
+</span> as the soloist. He was <span class="role">Principal Tuba Player</span> in the
+<span class="org">London Symphony Orchestra</span> during the 1970's. More information about this rare
+recording can be found by contacting their offices at 
+<span clas="adr"><span class="street-address">The Barbican Centre</span> in
+<span class="locality">London</span></span>.
+</p>
+
+<!-- event2 is another hCalendar -->
+<h3>hCalendar</h3>
+<p class="vevent">
+In the early hours of 
+<abbr class="dtstart" title="1944-06-06T00:00:00">June 06 1944</abbr>
+<span class="summary">Operation Overlord</span> commenced throughout 
+<span class="location">Normandy, France</span>. The aims of this
+operation were summarised thus,
+<q><span class="description">You are about to embark upon the Great Crusade, toward which we have striven these many months. The eyes of the world are upon you. The hopes and prayers of liberty-loving people everywhere march with you. In company with our brave Allies and brothers-in-arms on other Fronts, you will bring about the destruction of the German war machine, the elimination of Nazi tyranny over the oppressed peoples of Europe, and security for ourselves in a free world.</span></q>
+</p>
+</div>
+<div id="ufFooter">
+&copy; 2009 <a href="http://ntoll.org/">Nicholas H.Tollervey</a>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% load i18n %}
+<div class="adr">
+    {% if instance.street_address %}<div class="street-address">{{instance.street_address}}</div>{% endif %}
+    {% if instance.extended_address %}<div class="extended-address">{{instance.extended_address}}</div>{% endif %}
+    {% if instance.locality %}<span class="locality">{{instance.locality}}</span>&nbsp;{% endif %}
+    {% if instance.region %}<span class="region">{{instance.region}}</span>&nbsp;{% endif %}
+    {% if instance.postal_code %}<span class="postal-code">{{instance.postal_code}}</span>&nbsp;{% endif %}
+    {% if instance.country_name %}<span class="country-name">{{instance.get_country_name_display}}</span>{% endif %}
+</div>
