@@ -20,14 +20,13 @@
         <p>{% trans "Price: " %}<span class="price">{{instance.price}}</span></p>
         {% endif %}
         <div class="lister vcard">
-            <p>{% blocktrans %}
-            For more information, please contact
+            <p>{% trans "For more information, please contact" %}
             {% if instance.lister_url %}<a href="{{instance.lister_url}}" class="url">{% endif %}
                 <span class="fn">{{instance.lister_fn}}</span>
             {% if instance.lister_url %}</a>{% endif %}
             {% if instance.lister_email %}<a href="mailto:{{instance.lister_email}}" class="email">{{instance.lister_email}}</a>{% endif %}
             {% if instance.lister_tel %}<span class="tel"><span class="value">{{instance.lister_tel}}</span></span>{% endif %}
-            {% endblocktrans %}</p>
+            </p>
         </div>
     </p>
 </div>

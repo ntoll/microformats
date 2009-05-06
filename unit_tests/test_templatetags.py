@@ -276,7 +276,7 @@ class TemplateTagsTestCase(TestCase):
         def test_template_output(self):
             """ 
             Generates an html file containing various examples of the tags in
-            use
+            use for testing with screen-scrapers and browser plugins.
             """
             g = microformats.models.geo()
             g.latitude = 37.408183
@@ -357,11 +357,29 @@ class TemplateTagsTestCase(TestCase):
             hcl2.dtend = datetime.datetime(1944, 8, 30)
             hcl2.description = 'You are about to embark upon the Great Crusade, toward which we have striven these many months. The eyes of the world are upon you. The hopes and prayers of liberty-loving people everywhere march with you. In company with our brave Allies and brothers-in-arms on other Fronts, you will bring about the destruction of the German war machine, the elimination of Nazi tyranny over the oppressed peoples of Europe, and security for ourselves in a free world.'
             hcl2.save()
+            listing = microformats.models.hListing()
+            listing.listing_action = "sell"
+            listing.summary = "Pony requires a good home"
+            listing.description = "A young pony who answers to the name Django"\
+                " requires a new home having outgrown his current host. Easy"\
+                " going and fun to play with Django also provides rainbow"\
+                " manure that is sure to help the garden."
+            listing.lister_fn = "John Doe"
+            listing.lister_email = "john.doe@isp.net"
+            listing.lister_url = "http://isp.com/django_the_pony"
+            listing.lister_tel = "+44(0) 1234 567456"
+            listing.dtlisted = datetime.datetime(2009, 5, 6)
+            listing.dtexpired = datetime.datetime(2009, 8, 19)
+            listing.price = "£2500 ono"
+            listing.item_fn = "Django the Pony"
+            listing.item_url = "http://djangoproject.com/"
+            listing.save()
             template = get_template('test.html')
             data = {
                     'contact': hc,
                     'loc': g,
                     'event': hcl, 
+                    'listing': listing,
                     'person': x,
                     'c2': hc2,
                     'loc2': g2,
