@@ -1,6 +1,6 @@
 body {
     background:#FFFFFF url(swoosh.png) repeat-x scroll 0 0;
-    color:#666666;
+    color:#222222;
     font-family:arial,sans;
     font-size:62.5%;
 }
@@ -12,7 +12,7 @@ body {
 }
 
 a:link {
-    color:#557799;
+    color:#335577;
     text-decoration:none;
 }
 a:hover {
@@ -20,7 +20,7 @@ a:hover {
     text-decoration:underline;
 }
 a:active {
-    color:#557799;
+    color:#335577;
     text-decoration:none;
 }
 a:active:hover {
@@ -28,7 +28,7 @@ a:active:hover {
     text-decoration:underline;
 }
 a:visited {
-    color:#557799;
+    color:#335577;
     text-decoration:none;
 }
 a:visited:hover {
@@ -37,7 +37,7 @@ a:visited:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color:#B4C24B;
+    color:#84921B;
     font-family:Times;
     font-style:italic;
     font-weight:normal;
