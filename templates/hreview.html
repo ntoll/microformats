@@ -1,3 +1,17 @@
 {% load i18n %}
 <div class="hreview">
+    {% if instance.summary %}<strong class="summary">{{instance.summary}}</strong>{% endif %}
+    <div class="item vcard">
+        {% if instance.item_url %}<a href="{{instance.item_url}}" class="url">{% endif %}
+            <span class="fn">{{instance.item_fn}}</span>
+        {% if instance.item_url %}</a>{% endif %}
+        {% if instance.item_type %}
+        (<abbr class="type" title="{{instance.item_type}}">
+            {{instance.get_item_type_display}}
+        </abbr>)
+        {% endif %}
+        {% include adr_microformat_template %}
+        
+    </div>
+    
 </div>

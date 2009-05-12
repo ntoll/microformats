@@ -811,6 +811,10 @@ class hReview(LocationAwareMicroformat):
     For more information see:
 
     http://microformats.org/wiki/hreview
+
+    (I've omitted the "version" field as I'm assuming version 0.2 of the hReview
+    microformat specification [or later]. See the URL referenced above for more
+    information.)
     """
     ITEM_TYPE = (
             ('product', _('Product')),
@@ -834,35 +838,60 @@ class hReview(LocationAwareMicroformat):
             (5, _('5')),
             )
 
+    # This optional field serves as a title for the review itself.
     summary = models.TextField(
             _("Summary"),
-            blank=True
+            blank=True,
+            help_text=_('To serve as a title for the review.')
             )
+    # This optional field contains the full text representing the 
+    # written opinion of the reviewer. The field may include valid HTML markup 
+    # (e.g. paragraphs). User agents should preserve any markup. Multiple 
+    # descriptions or section descriptions (e.g. pros and cons, plusses and 
+    # minusses) should be included in the description field.
     description = models.TextField(
             _('Description'),
             blank=True
             )
+    # The rating is a fixed point integer (one decimal point of precision) 
+    # from 1 to 5 inclusive indicating a rating for the item, higher
+    # indicating a better rating by default. 
     rating = models.IntegerField(
             _('Rating'),
             choices=RATINGS,
             help_text=_('1 = worst, 5 = best')
             )
+    # This optional field when present must provide an ISO8601 
+    # absolute date time of when the review was written or otherwise authored. 
     dtreviewed = models.DateTimeField(
             _('Date of Review'),
             null=True,
             blank=True
             )
+    # The optional field specifies the person who authored the review. 
+    # If the reviewer is specified, an hCard representing the reviewer must be 
+    # provided. For anonymous reviews, use "anonymous" (without quotes) for the 
+    # full name of the reviewer.
     reviewer = models.CharField(
             _('Reviewer Name'),
             max_length=256,
             blank=True
             )
+    # This optional field "type" provides the type of the item being 
+    # reviewed, one of the following: product, business, event, person, place, 
+    # website, url.
+    # Nota Bene: I (ntoll) have added the following types to the choices list:
+    # book, film, music, software.
     item_type = models.CharField(
             _("Item Type"),
             max_length=8,
             choices=ITEM_TYPE,
             help_text=_('The kind of thing this review is for')
             )
+    # The rest of these fields allow the item being reviewed to be identified
+    # with hCard or hCalendar microformats.
+    # As this is also a location aware microformat you'll also be able to store
+    # the address or geo information of the thing being reviewed.
     item_fn = models.CharField(
             _('Item Name'),
             max_length=256
