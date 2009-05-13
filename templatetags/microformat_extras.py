@@ -42,7 +42,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-# Well be using all the models at some point or other
+# We'll be using all the models at some point or other
 import microformats.models
 import datetime
 
@@ -115,7 +115,7 @@ def fragment(value, arg, autoescape=None):
                             esc(value.isoformat()),
                             esc(value.strftime(format))
                         )
-        elif arg == 'longitude' or arg == 'latitude' or arg == "long" or arg =="lat":
+        elif arg == 'longitude' or arg == 'latitude' or arg == 'long' or arg == 'lat':
             result = u'<abbr class="%s" title="%s">%s</abbr>' % (
                             esc(arg),
                             esc(value),
@@ -168,12 +168,13 @@ def geo(value, arg=None, autoescape=None):
     property in the vCard standard (RFC2426) in HTML, one of several open
     microformat standards. 
     """
-    if isinstance(value, microformats.models.geo):
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'GEO_MICROFORMAT_TEMPLATE', False) and settings.GEO_MICROFORMAT_TEMPLATE or GEO_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # we have something else 
-        return fragment(value, arg, autoescape)
 geo.needs_autoescape = True
 
 @register.filter
@@ -200,12 +201,13 @@ def hcard(value, arg=None, autoescape=None):
     several open microformat standards suitable for embedding in HTML, XHTML,
     Atom, RSS, and arbitrary XML. 
     """
-    if isinstance(value, microformats.models.hCard):
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'HCARD_MICROFORMAT_TEMPLATE', False) and settings.HCARD_MICROFORMAT_TEMPLATE or HCARD_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # we have something else 
-        return fragment(value, arg, autoescape)
 hcard.needs_autoescape = True
 
 @register.filter
@@ -230,13 +232,13 @@ def adr(value, arg=None, autoescape=None):
     vCard standard (RFC2426) in HTML, one of several open microformat standards.
     It is also a property of hCard. 
     """
-    if isinstance(value, microformats.models.adr):
-        # we have an adr model
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'ADR_MICROFORMAT_TEMPLATE', False) and settings.ADR_MICROFORMAT_TEMPLATE or ADR_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # we have something else 
-        return fragment(value, arg, autoescape)
 adr.needs_autoescape = True
 
 @register.filter
@@ -264,13 +266,13 @@ def hcal(value, arg=None, autoescape=None):
     XHTML, Atom, RSS, and arbitrary XML. hCalendar is one of several open
     microformat standards. 
     """
-    if isinstance(value, microformats.models.hCalendar):
-        # we have an hCalendar model
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'HCAL_MICROFORMAT_TEMPLATE', False) and settings.HCAL_MICROFORMAT_TEMPLATE or HCAL_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # we have something else 
-        return fragment(value, arg, autoescape)
 hcal.needs_autoescape = True
 
 @register.filter
@@ -278,27 +280,31 @@ def hlisting(value, arg=None, autoescape=None):
     """
     Formats a value to conform with the hListing Microformat
     """
-    if isinstance(value, microformats.models.hListing):
-        # we have an hListing model
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'HLISTING_MICROFORMAT_TEMPLATE', False) and settings.HLISTING_MICROFORMAT_TEMPLATE or HLISTING_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # something else
-        return fragment(value, arg, autoescape)
 hlisting.needs_autoescape = True
 
 @register.filter
 def hreview(value, arg=None, autoescape=None):
     """
     Formats a value to conform with the hReview Microformat
+    
+    Inspired by the markup found here:
+
+    http://microformats.org/code/hreview/creator
     """
-    if isinstance(value, microformats.models.hReview):
-        # we have an hListing model
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         template_name = getattr(settings, 'HREVIEW_MICROFORMAT_TEMPLATE', False) and settings.HREVIEW_MICROFORMAT_TEMPLATE or HREVIEW_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-    else:
-        # something else
-        return fragment(value, arg, autoescape)
 hlisting.needs_autoescape = True
 
 @register.filter
@@ -318,8 +324,11 @@ def xfn(value, arg=None, autoescape=None):
         esc = conditional_escape
     else:
         esc = lambda x: x
-    if isinstance(value, microformats.models.xfn):
-        # we have an xfn model
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return mark_safe(esc(value))
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
         vals = ' '.join(esc(x.value) for x in value.relationships.all())
         result = u'<a href="%s" rel="%s">%s</a>' % (
                             esc(value.url),
@@ -327,7 +336,4 @@ def xfn(value, arg=None, autoescape=None):
                             esc(value.target)
                             )
         return mark_safe(result)
-    else:
-        # we have something else 
-        return mark_safe(esc(value))
 xfn.needs_autoescape = True

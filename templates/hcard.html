@@ -2,7 +2,7 @@
 <div id="hcard_{{instance.id}}" class="vcard">
     <div class="fn n">
         {% if instance.url %}<a href="{{instance.url}}" class="url">{% endif %}
-        {% if instance.n %}
+        {% if instance.given_name or instance.family_name or instance.additional_name %}
             {% if instance.honorific_prefix %}<span class="honorific-prefix">{{instance.honorific_prefix}}</span>{% endif %}
             {% if instance.given_name %}<span class="given-name">{{instance.given_name}}</span>{% endif %}
             {% if instance.additional_name %}<span class="additional-name">{{instance.additional_name}}</span>{% endif %}
@@ -13,7 +13,7 @@
         {% endif %}
         {% if instance.url %}</a>{% endif %}
     </div>
-    {% if instance.n %}
+    {% if instance.given_name or instance.family_name or instance.additional_name %}
     {% if instance.title %}<span class="title">{{instance.title}}</span>{% endif %}
     {% if instance.org %}
     <div class="org">{{instance.org}}</div>

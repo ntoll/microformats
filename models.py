@@ -376,7 +376,8 @@ class LocationAwareMicroformat(models.Model):
             _('Country'), 
             max_length=3, 
             choices = COUNTRY_LIST, 
-            blank=True
+            blank=True,
+            null=True
             )
     postal_code = models.CharField(
             _('Post Code'), 
@@ -418,14 +419,14 @@ class LocationAwareMicroformat(models.Model):
             self.extended_address,
             self.locality, 
             self.region, 
-            self.get_country_name_display(), 
+            self.country_name and self.get_country_name_display() or self.country_name, 
             self.postal_code,
             self.post_office_box,
-            ) if x.strip()))
+            ) if x and x.strip()))
         if result:
             return result
         else:
-            return _('None')
+            return None
 
     def geo(self):
         """
@@ -440,7 +441,7 @@ class LocationAwareMicroformat(models.Model):
                 str(self.longitude)
                 ))
         else:
-            return _('None')
+            return None
 
     class Meta:
         abstract = True
@@ -684,15 +685,21 @@ class hCalendar(LocationAwareMicroformat):
             )
     attendees = models.ManyToManyField(
             hCard,
-            related_name='attendees'
+            related_name='attendees',
+            null=True,
+            blank=True
             )
     contacts = models.ManyToManyField(
             hCard,
-            related_name='contacts'
+            related_name='contacts',
+            null=True,
+            blank=True
             )
     organizers = models.ManyToManyField(
             hCard,
-            related_name='organizers'
+            related_name='organizers',
+            null=True,
+            blank=True
             )
 
     class Meta:
@@ -718,15 +725,15 @@ class hListing(LocationAwareMicroformat):
     http://microformats.org/wiki/hlisting-proposal
     """
     LISTING_TYPE = (
-            ('sell', _('to sell')),
-            ('rent', _('for rent')),
-            ('trade', _('to trade')),
-            ('meet', _('meetup')),
-            ('announce', _('announcement')),
-            ('offer', _('on offer')),
-            ('wanted', _('is wanted')),
-            ('event', _('event')),
-            ('service', _('service')),
+            ('sell', _('To sell')),
+            ('rent', _('For rent')),
+            ('trade', _('To trade')),
+            ('meet', _('Meetup')),
+            ('announce', _('Announcement')),
+            ('offer', _('On offer')),
+            ('wanted', _('Is wanted')),
+            ('event', _('Event')),
+            ('service', _('Service')),
             )
 
     listing_action = models.CharField(
@@ -763,11 +770,13 @@ class hListing(LocationAwareMicroformat):
             )
     dtlisted = models.DateTimeField(
             _("Listing starts on"),
-            null=True
+            null=True,
+            blank=True
             )
     dtexprired = models.DateTimeField(
             _("Listing expires after"),
-            null=True
+            null=True,
+            blank=True
             )
     price = models.CharField(
             _("Price"),
@@ -875,14 +884,15 @@ class hReview(LocationAwareMicroformat):
     reviewer = models.CharField(
             _('Reviewer Name'),
             max_length=256,
-            blank=True
+            default=_('Anonymous'),
+            help_text=_('Defaults to "Anonymous" if not supplied')
             )
     # This optional field "type" provides the type of the item being 
     # reviewed, one of the following: product, business, event, person, place, 
     # website, url.
     # Nota Bene: I (ntoll) have added the following types to the choices list:
     # book, film, music, software.
-    item_type = models.CharField(
+    type = models.CharField(
             _("Item Type"),
             max_length=8,
             choices=ITEM_TYPE,
@@ -892,35 +902,40 @@ class hReview(LocationAwareMicroformat):
     # with hCard or hCalendar microformats.
     # As this is also a location aware microformat you'll also be able to store
     # the address or geo information of the thing being reviewed.
-    item_fn = models.CharField(
+    fn = models.CharField(
             _('Item Name'),
             max_length=256
             )
-    item_url = models.URLField(
+    url = models.URLField(
             _('Item URL'),
             blank=True,
             verify_exists=True
             )
-    item_photo = models.ImageField(
+    tel = models.CharField(
+            _('Telephone'),
+            max_length=64,
+            blank=True
+            )
+    photo = models.ImageField(
             upload_to='hreviewphoto',
             null=True,
             blank=True
             )
-    item_dtstart = models.DateTimeField(
+    dtstart = models.DateTimeField(
             _('Start'),
             null=True,
             blank=True
             )
-    item_dtend = models.DateTimeField(
+    dtend = models.DateTimeField(
             _('End'),
             null=True,
             blank=True
             )
-    item_all_day_event = models.BooleanField(
+    all_day_event = models.BooleanField(
             _('All day event'),
             default=False
             )
-    item_tz = models.CharField(
+    tz = models.CharField(
             _('Timezone'),
             max_length=8,
             blank=True,
@@ -933,7 +948,7 @@ class hReview(LocationAwareMicroformat):
         verbose_name_plural = _('hReviews')
 
     def __unicode__(self):
-        return u"%s: %s"%(self.item_fn, self.get_rating_display())
+        return u"%s: %s/5"%(self.fn, self.get_rating_display())
 
 class geo(models.Model):
     """

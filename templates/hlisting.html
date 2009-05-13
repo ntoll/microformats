@@ -1,18 +1,20 @@
 {% load i18n %}
 <div class="hlisting">
     <p>
-        <span class="item">
+        <span class="item vcard">
         {% if instance.item_url %}<a href="{{instance.item_url}}" class="url">{% endif %}
             <span class="fn">{{instance.item_fn}}</span>
         {% if instance.item_url %}</a>{% endif %}
+        {% if instance.adr %}
+        <span class="location">
+        {% include adr_microformat_template %}
+        </span>
+        {% endif %}
         </span>
         <span class="{{instance.listing_action}}">{{instance.get_listing_action_display}}</span>
         {% if instance.dtlisted %}(<abbr class="dtlisted" title="{{instance.dtlisted.isoformat}}">{{instance.dtlisted|date:"D d M Y"}}</abbr>){% endif %}
         {% if instance.summary %}<p class="summary">{{instance.summary}}</p>{% endif %}
         <p class="description">{{instance.description}}</p>
-        <div class="location vcard">
-        {% include adr_microformat_template %}
-        </div>
         {% if instance.dtexpired %}
         <p>{% trans "Available from: " %}<abbr class="dtexpired" title="{{instance.dtexpired.isoformat}}">{{instance.dtexpired|date:"D d M Y"}}</abbr></p>
         {% endif %}

@@ -5,5 +5,5 @@
     {% if instance.locality %}<span class="locality">{{instance.locality}}</span>&nbsp;{% endif %}
     {% if instance.region %}<span class="region">{{instance.region}}</span>&nbsp;{% endif %}
     {% if instance.postal_code %}<span class="postal-code">{{instance.postal_code}}</span>&nbsp;{% endif %}
-    {% if instance.country_name %}<span class="country-name">{{instance.get_country_name_display}}</span>{% endif %}
+    {% if instance.country_name %}<span class="country-name">{% if instance.get_country_name_display %}{{instance.get_country_name_display}}{% else %}{{instance.country_name}}{% endif %}</span>{% endif %}
 </div>

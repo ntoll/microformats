@@ -1,17 +1,108 @@
 {% load i18n %}
 <div class="hreview">
     {% if instance.summary %}<strong class="summary">{{instance.summary}}</strong>{% endif %}
-    <div class="item vcard">
-        {% if instance.item_url %}<a href="{{instance.item_url}}" class="url">{% endif %}
-            <span class="fn">{{instance.item_fn}}</span>
-        {% if instance.item_url %}</a>{% endif %}
-        {% if instance.item_type %}
-        (<abbr class="type" title="{{instance.item_type}}">
-            {{instance.get_item_type_display}}
-        </abbr>)
+    <abbr class="type" title="{{instance.type}}"> {{instance.get_type_display}}</abbr> {% trans "Review"%}
+    <br/>
+    {% if instance.dtreviewed %}
+    <abbr title="{{instance.dtreviewd.isoformat}}" class="dtreviewed">{{instance.dtreviewed|date:"D d M Y"}}</abbr>
+    {% endif %}
+    {% trans "by" %}
+    <span class="reviewer vcard"><span class="fn">{{instance.reviewer}}</span></span>
+    {% ifequal instance.type 'event' %}
+    <div class ="item vevent">
+        {% if instance.url %}<a href="{{instance.url}}" class="url">{% endif %}
+        {% if instance.all_day_event %}
+        <abbr title="{{instance.dtstart.isoformat}}" class="dtstart">{{instance.dtstart|date:"D d M Y"}}</abbr>
+        {% else %}
+        <abbr title="{{instance.dtstart.isoformat}}" class="dtstart">{{instance.dtstart|date:"D d M Y P"}}</abbr>
         {% endif %}
+        {% if instance.dtend %}
+        &nbsp;-&nbsp;
+            {% ifequal instance.dtstart.date instance.dtend.date %}
+        <abbr title="{{instance.dtend.isoformat}}" class="dtend">{% trans "All day event" %}</abbr>
+            {% else %}
+        <abbr title="{{instance.dtend.isoformat}}" class="dtend">{{instance.dtend|time:"P"}}</abbr>
+            {% endifequal %}
+        {% endif %}
+        {% if instance.url %}</a>{% endif %} -
+        <span class="summary">{{instance.fn}}</span>
+        {% if instance.adr %}
         {% include adr_microformat_template %}
-        
+        {% endif %}
     </div>
-    
+    {% else %}
+        {% ifequal instance.type 'business' %}
+    <div class="item vcard">
+        {% if instance.url%}
+        <a class="url fn org" href="{{instance.url}}">
+        {% else %}
+        <span class="fn org">
+        {% endif %}
+        {{instance.fn}}
+        {% if instance.url%}
+        </a>
+        {% else %}
+        </span>
+        {% endif %}
+        {% if instance.tel %}<div class="tel">{{instance.tel}}</div>{% endif %}
+        {% if instance.adr %}
+        {% include adr_microformat_template %}
+        {% endif %}
+    </div>
+        {% else %}
+            {% ifequal instance.type 'person' %}
+    <div class="item vcard">
+        {% if instance.url%}
+        <a class="url fn" href="{{instance.url}}">
+        {% else %}
+        <span class="fn">
+        {% endif %}
+        {{instance.fn}}
+        {% if instance.url%}
+        </a>
+        {% else %}
+        </span>
+        {% endif %}
+        {% if instance.tel %}<div class="tel">{{instance.tel}}</div>{% endif %}
+        {% if instance.adr %}
+        {% include adr_microformat_template %}
+        {% endif %}
+    </div>
+            {% else %}
+    <div class="item">
+        {% if instance.url%}
+        <a class="url fn" href="{{instance.url}}">
+        {% else %}
+        <span class="fn">
+        {% endif %}
+        {{instance.fn}}
+        {% if instance.url%}
+        </a>
+        {% else %}
+        </span>
+        {% endif %}
+    </div>
+            {% endifequal %}
+        {% endifequal %}
+    {% endifequal %}
+    {% ifequal instance.rating 1 %}
+    <abbr class="rating" title="1">★☆☆☆☆</abbr>
+    {% endifequal %}
+    {% ifequal instance.rating 2 %}
+    <abbr class="rating" title="2">★★☆☆☆</abbr>
+    {% endifequal %}
+    {% ifequal instance.rating 3 %}
+    <abbr class="rating" title="3">★★★☆☆</abbr>
+    {% endifequal %}
+    {% ifequal instance.rating 4 %}
+    <abbr class="rating" title="4">★★★★☆</abbr>
+    {% endifequal %}
+    {% ifequal instance.rating 5 %}
+    <abbr class="rating" title="5">★★★★★</abbr>
+    {% endifequal %}
+    {% if instance.description %}
+    <blockquote class="description">
+        {{instance.description}}
+    </blockquote>
+    {% endif %}
 </div>
