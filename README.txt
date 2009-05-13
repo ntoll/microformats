@@ -97,7 +97,7 @@ http://microformats.org/code/hcard/creator)
 
 In addition you can pass individual fields thus:
 
-{{hCalInstance|hcard:'role'}}
+{{hCardInstance.role|hcard:'role'}}
 
 Which will result in the following markup:
 
