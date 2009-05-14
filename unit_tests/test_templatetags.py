@@ -99,6 +99,42 @@ class TemplateTagsTestCase(TestCase):
                             )
             self.assertEquals(expected, result)
 
+            # Check for geo related abbr pattern
+            result = fragment(37.408183, arg="latitude", autoescape=True)
+            expected = u'<abbr class="latitude" title="37.408183">37.408183</abbr>'
+            self.assertEquals(expected, result)
+
+            result = fragment(37.408183, arg="lat", autoescape=True)
+            self.assertEquals(expected, result)
+
+            result = fragment(-122.13855, arg="longitude", autoescape=True)
+            expected = u'<abbr class="longitude" title="-122.13855">-122.13855</abbr>'
+            self.assertEquals(expected, result)
+
+            result = fragment(-122.13855, arg="long", autoescape=True)
+            self.assertEquals(expected, result)
+
+            # Check for email address anchor element (this depends on the value
+            # of the field *NOT* the name of the class passed as an arg
+            result = fragment('joe@blogs.com', arg='foo', autoescape=True)
+            expected = u'<a class="foo" href="mailto:joe@blogs.com">joe@blogs.com</a>'
+            self.assertEquals(expected, result)
+
+            # Check for URL anchor element (works in the same way as email but
+            # with a different regex
+            result = fragment('http://foo.com', arg='bar', autoescape=True)
+            expected = u'<a class="bar" href="http://foo.com">http://foo.com</a>'
+            self.assertEquals(expected, result)
+
+            # Lets make sure we can handle ints and floats
+            result = fragment(1.234, arg='foo', autoescape=True)
+            expected = u'<span class="foo">1.234</span>'
+            self.assertEquals(expected, result)
+
+            result = fragment(1234, arg='foo', autoescape=True)
+            expected = u'<span class="foo">1234</span>'
+            self.assertEquals(expected, result)
+
         def test_non_microformat_model_rendering(self):
             """
             Make sure we can render objects that are not microformat models from

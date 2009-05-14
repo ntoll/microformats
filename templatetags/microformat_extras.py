@@ -42,6 +42,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
+from django.forms.fields import email_re, url_re
 # We'll be using all the models at some point or other
 import microformats.models
 import datetime
@@ -62,6 +63,22 @@ register = template.Library()
 ########################
 # Some utility functions
 ########################
+
+def is_valid_email(email):
+    """ 
+    Is the string a valid email? 
+    
+    (We use the regex Django uses to define an email address)
+    """
+    return True if email_re.match(email) else False
+
+def is_valid_url(url):
+    """ 
+    Is the string a valid url? 
+    
+    (We use the regex Django uses to define a URL)
+    """
+    return True if url_re.match(url) else False
 
 def fragment(value, arg, autoescape=None):
     """
@@ -116,9 +133,29 @@ def fragment(value, arg, autoescape=None):
                             esc(value.strftime(format))
                         )
         elif arg == 'longitude' or arg == 'latitude' or arg == 'long' or arg == 'lat':
+            # Check for geo related fields so we can use the abbr pattern
+            if arg == 'latitude' or arg == 'lat':
+                klass = u'latitude'
+            else:
+                klass = u'longitude'
             result = u'<abbr class="%s" title="%s">%s</abbr>' % (
-                            esc(arg),
+                            esc(klass),
                             esc(value),
+                            esc(value)
+                        )
+        elif is_valid_email(esc(value)):
+            # If the field is an email address we need to wrap it in an anchor
+            # element
+            result = u'<a class="%s" href="mailto:%s">%s</a>'%(
+                            esc(arg),
+                            esc(value), 
+                            esc(value)
+                        )
+        elif is_valid_url(esc(value)):
+            # If the field is a URL we need to wrap it in an anchor element
+            result = u'<a class="%s" href="%s">%s</a>'%(
+                            esc(arg),
+                            esc(value), 
                             esc(value)
                         )
         else:

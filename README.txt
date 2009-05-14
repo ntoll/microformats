@@ -16,8 +16,8 @@ see https://addons.mozilla.org/en-US/firefox/addon/4106.
 
 This application attempts to help in two ways:
 
-1) You get models for the supported microformats so you can store data in the
-database (you don't have to use these models - see below for more information)
+1) You get models: so you can store data relating to the supported microformats
+(you don't have to use these models - see below for more information)
 
 2) You get markup: there are some example templates for the supported
 microformats in the /microformats/templates directory and I've written some
@@ -34,12 +34,12 @@ Currently the supported microformats are:
 * hReview - for representing an opinion 
 * XFN - for representing friends and relationships
 
-More will follow.
+More will follow (most likely hAtom).
 
 In the code, you get the following:
 
 * Models relating to the geo, hCard, adr, hCalendar, hListing, hReview and XFN 
-microformats. hCard has two models:
+microformats (models.py). hCard has two models:
     
     1) hCard - a "flat" model containing only the most common fields
 
@@ -47,18 +47,20 @@ microformats. hCard has two models:
     related tables)
 
 * Simplified forms for the geo, hCard, adr, org, email, tel and hCalendar,
-hListing and hReview microformats and fragments.
+hListing and hReview microformats and fragments (forms.py).
 
-* Some useful admin functionality.
+* Some useful admin functionality (admin.py).
 
 * Template filters for the geo, hCard, adr, hCalendar, hListing, hReview and 
-XFN microformats.
+XFN microformats (templatetags/microformat_extras.py).
+
+* Some example templates for rendering the microformats (templates/*.html)
 
 To use the template filters you need to register the application and add:
 
 {% load microformat_extras %}
 
-to the top of the template you're using.
+to the top of the template you're using in your application.
 
 If you have an instance of a microformat model in your context you can use the
 appropriate template filter to display it:
@@ -103,6 +105,9 @@ Which will result in the following markup:
 
 <span class="role">Vice President</span>
 
+(An example of the class-design-pattern:
+http://microformats.org/wiki/class-design-pattern)
+
 The template filters are clever enough to deal with different "types" of field.
 For example, if you pass a datetime value like this:
 
@@ -111,6 +116,9 @@ For example, if you pass a datetime value like this:
 You'll get this:
 
 <abbr class="dtstart" title="2009-04-11T13:30:00">Sat 11 Apr 2009 1:30 p.m.</abbr>
+
+(An example of the datetime-design-pattern:
+http://microformats.org/wiki/datetime-design-pattern)
 
 You can even do this:
 
@@ -122,8 +130,18 @@ To get this:
 
 (Notice the passing of arguments for strftime.)
 
+If you pass a valid email address or URI then the span element will be replaced
+with an anchor with the appropriate href attribute. For example, is you do
+something like this:
+
+{{hReview.url|hreview:'url'}}
+
+You'll get this:
+
+<a class="url" href="http://www.acme.com">http://www.acme.com</a>
+
 You don't even have to pass instances of the microformat models for the
-template filters to work. The templates the filters wrap arround simply assume
+template filters to work. The templates the filters wrap around simply assume
 the same field names as found in the microformat specifications (where '-' is 
 replaced with the more Pythonic '_' so 'given-name' becomes 'given_name').
 
