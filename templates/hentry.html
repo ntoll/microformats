@@ -1,0 +1,12 @@
+{% load i18n %}
+<div class="hentry entry">
+   <p class="entry-title">{% if instance.bookmark %}<a rel="bookmark" href="{{instance.bookmark}}">{% endif %}{{instance.entry_title}}{% if instance.bookmark %}</a>{% endif %}
+   <span class="vcard author"><span class="fn n">{{instance.author}}</span></span>
+   <abbr class="updated" title="{{instance.updated.isoformat}}">{{instance.updated|date:"D d M Y"}}</abbr></p>
+   {% if instance.entry_summary %}
+   <div class="entry-summary"><em>{{instance.entry_summary}}</em></div>
+   {% endif %}
+   {% if instance.entry_content %}
+   <div class="entry-content">{{instance.entry_content}}</div>
+   {% endif %}
+</div>

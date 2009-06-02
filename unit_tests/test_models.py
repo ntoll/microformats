@@ -187,3 +187,16 @@ class ModelTestCase(TestCase):
             x.save()
             expected = 'Nicholas Tollervey'
             self.assertEquals(expected, x.__unicode__())
+
+        def test_hfeed(self):
+            """
+            Make sure the string representation of teh hFeed looks correct
+            """
+            # Set things up
+            f = hFeed()
+            f.save()
+            self.assertEqual(u'Uncategorized feed', f.__unicode__())
+            f.category = u'Some, tags'
+            f.save()
+            self.assertEqual(u'Some, tags', f.__unicode__())
+

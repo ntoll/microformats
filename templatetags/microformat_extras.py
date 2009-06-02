@@ -56,6 +56,8 @@ HCAL_MICROFORMAT_TEMPLATE = 'hcal.html'
 HLISTING_MICROFORMAT_TEMPLATE = 'hlisting.html'
 HREVIEW_MICROFORMAT_TEMPLATE = 'hreview.html'
 ADR_MICROFORMAT_TEMPLATE = 'adr.html'
+HFEED_MICROFORMAT_TEMPLATE = 'hfeed.html'
+HENTRY_MICROFORMAT_TEMPLATE = 'hentry.html'
 
 # For registering the templates
 register = template.Library()
@@ -342,7 +344,7 @@ def hreview(value, arg=None, autoescape=None):
         # microformat
         template_name = getattr(settings, 'HREVIEW_MICROFORMAT_TEMPLATE', False) and settings.HREVIEW_MICROFORMAT_TEMPLATE or HREVIEW_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
-hlisting.needs_autoescape = True
+hreview.needs_autoescape = True
 
 @register.filter
 def xfn(value, arg=None, autoescape=None):
@@ -374,3 +376,39 @@ def xfn(value, arg=None, autoescape=None):
                             )
         return mark_safe(result)
 xfn.needs_autoescape = True
+
+@register.filter
+def hfeed(value, arg=None, autoescape=None):
+    """
+    Formats a value to conform with the hFeed Microformat fragment
+    
+    Inspired by the markup found here:
+
+    http://microformats.org/wiki/hatom-examples
+    """
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
+        template_name = getattr(settings, 'HFEED_MICROFORMAT_TEMPLATE', False) and settings.HFEED_MICROFORMAT_TEMPLATE or HFEED_MICROFORMAT_TEMPLATE
+        return mark_safe(render_microformat(value, template_name))
+hfeed.needs_autoescape = True
+
+@register.filter
+def hentry(value, arg=None, autoescape=None):
+    """
+    Formats a value to conform with the hEntry Microformat fragment
+    
+    Inspired by the markup found here:
+
+    http://microformats.org/wiki/hatom-examples
+    """
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
+        template_name = getattr(settings, 'HENTRY_MICROFORMAT_TEMPLATE', False) and settings.HENTRY_MICROFORMAT_TEMPLATE or HENTRY_MICROFORMAT_TEMPLATE
+        return mark_safe(render_microformat(value, template_name))
+hentry.needs_autoescape = True

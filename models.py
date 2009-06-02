@@ -1092,6 +1092,122 @@ class xfn(models.Model):
         else:
             return self.target 
 
+class hFeed(models.Model):
+    """
+    The hFeed model is used for representing feeds in the hAtom microformat.
+
+    hAtom is a microformat for content that can be syndicated, primarily but not
+    exclusively weblog postings. hAtom is based on a subset of the Atom
+    syndication format. hAtom will be one of several microformats open
+    standards.
+
+    For more information see:
+
+    http://microformats.org/wiki/hatom
+
+    """
+    category = models.TextField(
+            _('Category(ies)'),
+            blank=True,
+            help_text=_('A comma-separated list of keywords or phrases')
+            )
+
+    class Meta:
+        verbose_name = _('hFeed');
+        verbose_name_plural = _('hFeeds')
+
+    def __unicode__(self):
+        if self.category:
+            return self.category
+        else:
+            return _('Uncategorized feed')
+
+class hEntry(models.Model):
+    """
+    The hEntry model is used for representing entries in the hAtom microformat.
+
+    hAtom is a microformat for content that can be syndicated, primarily but not
+    exclusively weblog postings. hAtom is based on a subset of the Atom
+    syndication format. hAtom will be one of several microformats open
+    standards.
+
+    For more information see:
+
+    http://microformats.org/wiki/hatom
+    """
+
+    # An Entry Title element represents the concept of an Atom entry title
+    # The "atom:title" element is a Text construct that conveys a human-readable
+    # title for an entry or feed. 
+    entry_title = models.TextField(
+            _("Entry Title"),
+            help_text=_('Title for the entry.')
+            )
+    # An Entry Content element represents the concept of an Atom content
+    # The "atom:content" element either contains or links to the content of the
+    # entry. The content of atom:content is Language-Sensitive. 
+    entry_content = models.TextField(
+            _('Content'),
+            blank=True
+            )
+    # An Entry Summary element represents the concept of an Atom summary
+    # The "atom:summary" element is a Text construct that conveys a short
+    # summary, abstract, or excerpt of an entry. 
+    entry_summary = models.TextField(
+            _('Summary'),
+            blank=True
+            )
+    # An Entry Updated element represents the concept of Atom updated
+    # The "atom:updated" element is a Date construct indicating the most recent
+    # instant in time when an entry or feed was modified in a way the publisher
+    # considers significant. Therefore, not all modifications necessarily result
+    # in a changed atom:updated value.
+    updated = models.DateTimeField(
+            _('Updated on'),
+            )
+    # An Entry Published element represents the concept of Atom published
+    # The "atom:published" element is a Date construct indicating an instant in
+    # time associated with an event early in the life cycle of the entry. 
+    published = models.DateTimeField(
+            _('Published on'),
+            null=True,
+            blank=True
+            )
+    # An Entry Author element represents the concept of an Atom author
+    # An Entry Author element MUST be encoded in an hCard
+    # The "atom:author" element is a Person construct that indicates the author
+    # of the entry or feed.
+    author = models.CharField(
+            _('Author'),
+            max_length=256,
+            default=_('Anonymous'),
+            help_text=_('Defaults to "Anonymous" if not supplied')
+            )
+    # A permalink to the referenced entry
+    bookmark = models.URLField(
+            _('Bookmark (permalink)'),
+            verify_exists=False,
+            blank=True
+            )
+    # The feed this entry is associated with
+    hfeed = models.ForeignKey(
+            hFeed,
+            null=True,
+            related_name='entries'
+            )
+
+    class Meta:
+        verbose_name = _('hEntry')
+        verbose_name_plural = _('hEntries')
+
+    def __unicode__(self):
+        return u"%s: %s (%s)"%(
+                self.entry_title, 
+                self.author,
+                self.updated.strftime('%c')
+                )
+
+
 class hCardComplete(models.Model):
     """ 
     A full (correct) representation an hCard microformat.

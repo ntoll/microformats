@@ -115,13 +115,13 @@ class TemplateTagsTestCase(TestCase):
             self.assertEquals(expected, result)
 
             # Check for email address anchor element (this depends on the value
-            # of the field *NOT* the name of the class passed as an arg
+            # of the field *NOT* the name of the class passed as an arg)
             result = fragment('joe@blogs.com', arg='foo', autoescape=True)
             expected = u'<a class="foo" href="mailto:joe@blogs.com">joe@blogs.com</a>'
             self.assertEquals(expected, result)
 
             # Check for URL anchor element (works in the same way as email but
-            # with a different regex
+            # with a different regex)
             result = fragment('http://foo.com', arg='bar', autoescape=True)
             expected = u'<a class="bar" href="http://foo.com">http://foo.com</a>'
             self.assertEquals(expected, result)
@@ -616,7 +616,43 @@ class TemplateTagsTestCase(TestCase):
             rev5.type='film'
             rev5.fn='Star Wars - The Phantom Menace'
             rev5.save()
-
+            feed = microformats.models.hFeed()
+            feed.save()
+            entry1 = microformats.models.hEntry()
+            entry1.hfeed = feed
+            entry1.entry_title = 'Entry 1 Title'
+            entry1.entry_content = 'Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.'
+            entry1.entry_summary = 'Lorem ipsum dolor sit amet doo-dah whatsit thingymajig'
+            entry1.author = 'A.N.Other'
+            entry1.bookmark = 'http://website.com/entry1'
+            entry1.updated = datetime.datetime(2009, 6, 1)
+            entry1.save()
+            entry2 = microformats.models.hEntry()
+            entry2.hfeed = feed
+            entry2.entry_title = 'Entry 2 Title'
+            entry2.entry_content = 'Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.'
+            entry2.entry_summary = 'Lorem ipsum dolor sit amet doo-dah whatsit thingymajig'
+            entry2.author = 'Sidney Humphries'
+            entry2.bookmark = 'http://website.com/entry2'
+            entry2.updated = datetime.datetime(2009, 3, 14)
+            entry2.save()
+            entry3 = microformats.models.hEntry()
+            entry3.hfeed = feed
+            entry3.entry_title = 'Entry 3 Title'
+            entry3.entry_content = 'Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.'
+            entry3.entry_summary = 'Lorem ipsum dolor sit amet doo-dah whatsit thingymajig'
+            entry3.author = 'Nicholas Hawkesmoor'
+            entry3.bookmark = 'http://website.com/entry3'
+            entry3.updated = datetime.datetime(2008, 12, 28)
+            entry3.save()
+            entry4 = microformats.models.hEntry()
+            entry4.entry_title = 'Entry 4 Title'
+            entry4.entry_content = 'Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.'
+            entry4.entry_summary = 'Lorem ipsum dolor sit amet doo-dah whatsit thingymajig'
+            entry4.author = 'Fred Blogs'
+            entry4.bookmark = 'http://website.com/entry4'
+            entry4.updated = datetime.datetime(2008, 11, 15)
+            entry4.save()
 
             # All the data is defined so lets render the test template...
             template = get_template('test.html')
@@ -633,7 +669,9 @@ class TemplateTagsTestCase(TestCase):
                     'person': x,
                     'c2': hc2,
                     'loc2': g2,
-                    'event2': hcl2
+                    'event2': hcl2,
+                    'feed': feed,
+                    'entry': entry4,
                     }
             context = Context(data)
             import html_test

@@ -33,13 +33,12 @@ Currently the supported microformats are:
 * hListing - for representing an advertisement
 * hReview - for representing an opinion 
 * XFN - for representing friends and relationships
-
-More will follow (most likely hAtom).
+* hAtom - for syndicated content
 
 In the code, you get the following:
 
-* Models relating to the geo, hCard, adr, hCalendar, hListing, hReview and XFN 
-microformats (models.py). hCard has two models:
+* Models relating to the geo, hCard, adr, hCalendar, hListing, hReview, hAtom 
+and XFN microformats (models.py). hCard has two models:
     
     1) hCard - a "flat" model containing only the most common fields
 
@@ -47,7 +46,7 @@ microformats (models.py). hCard has two models:
     related tables)
 
 * Simplified forms for the geo, hCard, adr, org, email, tel and hCalendar,
-hListing and hReview microformats and fragments (forms.py).
+hListing, hReview, hFeed and hEntry microformats and fragments (forms.py).
 
 * Some useful admin functionality (admin.py).
 
@@ -131,7 +130,7 @@ To get this:
 (Notice the passing of arguments for strftime.)
 
 If you pass a valid email address or URI then the span element will be replaced
-with an anchor with the appropriate href attribute. For example, is you do
+with an anchor with the appropriate href attribute. For example, if you do
 something like this:
 
 {{hReview.url|hreview:'url'}}

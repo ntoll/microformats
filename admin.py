@@ -45,11 +45,20 @@ class hReviewAdmin(admin.ModelAdmin):
     save_on_top = True
     search_fields = ('fn', 'reviewer', 'description', 'summary')
 
+class hEntryAdmin(admin.ModelAdmin):
+    """ Django admin class for hEntry microformat """
+    list_display = ('entry_title', 'author', 'updated', 'entry_summary')
+    list_display_links = ('entry_title',)
+    list_filter = ('author', 'updated')
+    save_on_top = True
+    search_fields = ('entry_title', 'entry_content', 'entry_summary', 'author')
+
 admin.site.register(geo, geoAdmin)
 admin.site.register(hCard, hCardAdmin)
 admin.site.register(hCalendar, hCalendarAdmin)
 admin.site.register(hListing, hListingAdmin)
 admin.site.register(hReview, hReviewAdmin)
+admin.site.register(hEntry, hEntryAdmin)
 admin.site.register(adr_type)
 admin.site.register(adr)
 admin.site.register(tel_type)
@@ -67,3 +76,4 @@ admin.site.register(key)
 admin.site.register(mailer)
 admin.site.register(xfn_values)
 admin.site.register(xfn)
+admin.site.register(hFeed)
