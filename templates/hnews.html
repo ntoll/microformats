@@ -9,10 +9,21 @@
    <div class="entry-summary"><em>{{instance.entry_summary}}</em></div>
    {% endif %}
    {% if instance.entry_content %}
-   <div class="entry-content"><span class="dateline">{{instance.dateline}}</span>{{instance.entry_content}}</div>
+   <div class="entry-content">
+       {% if instance.latitude and instance.longitude %}
+       <abbr title="{{instance.latitude}},{{instance.longitude}}" class="dateline geo">
+          {{instance.dateline}}
+       </abbr>
+       {% else %}
+       <span class="dateline">
+          {{instance.dateline}}
+       </span>
+       {% endif %}
+       {{instance.entry_content}}
+   </div>
    {% endif %}
    <div class="geo">
-      Lat: <span class="latitude">{{instance.latitude}}</span> 
+      Lat: <span class="latitude">{{}}</span> 
       Long: <span class="longitude">{{instance.longitude}}</span>
    </div>
   <div>
