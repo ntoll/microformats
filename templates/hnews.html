@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="hnews hentry item">
+   <p class="entry-title">{% if instance.bookmark %}<a rel="bookmark" href="{{instance.bookmark}}">{% endif %}{{instance.entry_title}}{% if instance.bookmark %}</a>{% endif %}
+   <span class="vcard author"><span class="fn n">{{instance.author}}</span></span>
+   <span class="source-org vcard"><span class="org fn">{{instance.source_org}}</span></span>
+   <a href="{{instance.principles_url}}" rel="principles"><img src="{{instance.principles_img}}" /></a>
+   <abbr class="updated" title="{{instance.updated.isoformat}}">{{instance.updated|date:"D d M Y"}}</abbr></p>
+   {% if instance.entry_summary %}
+   <div class="entry-summary"><em>{{instance.entry_summary}}</em></div>
+   {% endif %}
+   {% if instance.entry_content %}
+   <div class="entry-content"><span class="dateline">{{instance.dateline}}</span>{{instance.entry_content}}</div>
+   {% endif %}
+   <div class="geo">
+      Lat: <span class="latitude">{{instance.latitude}}</span> 
+      Long: <span class="longitude">{{instance.longitude}}</span>
+   </div>
+  <div>
+      <a rel="item-license" href="{{instance.license_url}}">
+          {{instance.license_description}}
+      </a>
+  </div>
+</div>
