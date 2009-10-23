@@ -413,3 +413,21 @@ def hentry(value, arg=None, autoescape=None):
         template_name = getattr(settings, 'HENTRY_MICROFORMAT_TEMPLATE', False) and settings.HENTRY_MICROFORMAT_TEMPLATE or HENTRY_MICROFORMAT_TEMPLATE
         return mark_safe(render_microformat(value, template_name))
 hentry.needs_autoescape = True
+
+@register.filter
+def hnews(value, arg=None, autoescape=None):
+    """
+    Formats a value to conform with the hNews Microformat fragment
+    
+    Inspired by the markup found here:
+
+    http://microformats.org/wiki/hnews-examples
+    """
+    if isinstance(value, datetime.datetime) or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, float) or isinstance(value, int) or isinstance(value, long) or isinstance(value, complex):
+        return fragment(value, arg, autoescape)
+    else:
+        # lets try rendering something with the correct attributes for this
+        # microformat
+        template_name = getattr(settings, 'HNEWS_MICROFORMAT_TEMPLATE', False) and settings.HNEWS_MICROFORMAT_TEMPLATE or HNEWS_MICROFORMAT_TEMPLATE
+        return mark_safe(render_microformat(value, template_name))
+hentry.needs_autoescape = True

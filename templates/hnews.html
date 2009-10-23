@@ -2,7 +2,17 @@
 <div class="hnews hentry item">
    <p class="entry-title">{% if instance.bookmark %}<a rel="bookmark" href="{{instance.bookmark}}">{% endif %}{{instance.entry_title}}{% if instance.bookmark %}</a>{% endif %}
    <span class="vcard author"><span class="fn n">{{instance.author}}</span></span>
-   <span class="source-org vcard"><span class="org fn">{{instance.source_org}}</span></span>
+   <span class="source-org vcard">
+      {% if instance.source_url %}
+      <a class="url org fn" href="{{instance.source_url}}">
+          {{instance.source_org}}
+      </a>
+      {% else %}
+      <span class="org fn">
+          {{instance.source_org}}
+      </span>
+      {% endif %}
+   </span>
    <a href="{{instance.principles_url}}" rel="principles"><img src="{{instance.principles_img}}" /></a>
    <abbr class="updated" title="{{instance.updated.isoformat}}">{{instance.updated|date:"D d M Y"}}</abbr></p>
    {% if instance.entry_summary %}
@@ -13,12 +23,12 @@
        {% if instance.dateline %}
        {% if instance.latitude and instance.longitude %}
        <abbr title="{{instance.latitude}},{{instance.longitude}}" class="dateline geo">
-          {{instance.dateline}}
-       </abbr>
+          {{instance.dateline|upper}}
+       </abbr> &mdash;
        {% else %}
        <span class="dateline">
-          {{instance.dateline}}
-       </span>
+          {{instance.dateline|upper}}
+       </span> &mdash;
        {% endif %}
        {% endif %}
        {{instance.entry_content}}

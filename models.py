@@ -1207,7 +1207,7 @@ class hEntry(models.Model):
                 self.updated.strftime('%c')
                 )
 
-class hNews(hEntry):
+class hNews(hEntry, LocationAwareMicroformat):
     """
     The hNews model is used for representing online news content.
 

@@ -668,6 +668,8 @@ class TemplateTagsTestCase(TestCase):
             item1.license_description = 'Terms of service'
             item1.locality = 'Los Angeles'
             item1.country_name = 'US'
+            item1.longitude = -118.2666667
+            item1.latitude = 34.0444444
             item1.save()
 
             # All the data is defined so lets render the test template...
