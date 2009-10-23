@@ -1207,6 +1207,75 @@ class hEntry(models.Model):
                 self.updated.strftime('%c')
                 )
 
+class hNews(hEntry):
+    """
+    The hNews model is used for representing online news content.
+
+    hNews is a microformat that expands the hAtom standard represented by
+    the hEntry mondel so it is better suited for journalistic content.
+
+    It was originated by The Associated Press and Media Standards Trust 
+    and first published as a draft in Fall 2009.
+
+    For more information see:
+
+    http://microformats.org/wiki/hnews
+    """
+    # Source Organization represents the originating organization for the news story. 
+    source_org = models.TextField(
+            _('Source organization')
+            )
+    # principles represents the statement of principles and ethics used by the news 
+    # organization that produced the news story.
+    principles_url = models.URLField(
+            _('Link to statement of principles'),
+            verify_exists=False,
+            blank=True
+            )
+    # A link to an image that will tease the statement of principles
+    # by default it's set to one provided by the hNews creators
+    principles_img = models.URLField(
+            _('Link to image representing principles link'),
+            verify_exists=False,
+            blank=True,
+            default='http://labs.ap.org/principles-button-blue.png'
+            )
+    # The licensing and attribution requirements for republication
+    license_url = models.URLField(
+            _('Link to license'),
+            verify_exists=False,
+            blank=True
+            )
+    license_description = models.TextField(
+            _('Description of license'),
+            blank=True
+            )
+
+    class Meta:
+        verbose_name = _('hNews')
+        verbose_name_plural = _('hNews')
+
+    def __unicode__(self):
+        return u"%s: %s (%s)"%(
+                self.entry_title, 
+                self.source_org,
+                self.updated.strftime('%c')
+                )
+
+    def dateline(self):
+        """
+        Returns a Unicode string representation of the dateline where
+        the story originated
+        """
+        result = u', '.join((x for x in (
+            self.locality, 
+            self.country_name and self.get_country_name_display() or self.country_name, 
+            ) if x and x.strip()))
+        if result:
+            return result
+        else:
+            return None
+
 
 class hCardComplete(models.Model):
     """ 
