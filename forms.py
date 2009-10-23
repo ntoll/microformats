@@ -43,7 +43,7 @@ from django.utils.translation import ugettext as _
 # Microformats
 from microformats.models import geo, hCard, adr, adr_type, org, email,\
         email_type, tel, tel_type, hCalendar, hReview, hListing, hFeed,\
-        hEntry
+        hEntry, hNews
 
 class GeoForm(forms.ModelForm):
     """
@@ -211,6 +211,14 @@ class hEntryForm(forms.ModelForm):
     """
     class Meta:
         model = hEntry
+
+class hNewsForm(LocationAwareForm):
+    """
+    A simple form for gathering information for the hNews part of the hEntry
+    microformat.
+    """
+    class Meta:
+        model = hNews
 
 class AdrForm(forms.ModelForm):
     """
