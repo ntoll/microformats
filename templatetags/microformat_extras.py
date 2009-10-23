@@ -58,6 +58,7 @@ HREVIEW_MICROFORMAT_TEMPLATE = 'hreview.html'
 ADR_MICROFORMAT_TEMPLATE = 'adr.html'
 HFEED_MICROFORMAT_TEMPLATE = 'hfeed.html'
 HENTRY_MICROFORMAT_TEMPLATE = 'hentry.html'
+HNEWS_MICROFORMAT_TEMPLATE = 'hnews.html'
 
 # For registering the templates
 register = template.Library()

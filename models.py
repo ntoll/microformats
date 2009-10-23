@@ -1225,6 +1225,11 @@ class hNews(hEntry):
     source_org = models.TextField(
             _('Source organization')
             )
+    source_url = models.URLField(
+            _('Link to the source organization'),
+            verify_exists=False,
+            blank=True
+            )
     # principles represents the statement of principles and ethics used by the news 
     # organization that produced the news story.
     principles_url = models.URLField(

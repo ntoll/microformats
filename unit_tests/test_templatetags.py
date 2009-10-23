@@ -653,6 +653,22 @@ class TemplateTagsTestCase(TestCase):
             entry4.bookmark = 'http://website.com/entry4'
             entry4.updated = datetime.datetime(2008, 11, 15)
             entry4.save()
+            item1 = microformats.models.hNews()
+            item1.hfeed = feed
+            item1.entry_title = 'L.A. Icon Otis Chandler Dies at 78'
+            item1.entry_content = 'Otis Chandler, whose vision and determination as publisher of the Los Angeles Times from 1960 to 1980 catapulted the paper from mediocrity into the front ranks of American journalism, died today of a degenerative illness called Lewy body disease. He was 78.'
+            item1.entry_summary = 'An obituary of Los Angeles Times Publisher Otis Chandler'
+            item1.author = 'David Shaw and Mitchell Landsberg'
+            item1.bookmark = 'http://www.latimes.com/news/local/la-me-chandler-obit,0,7195252.story'
+            item1.updated = datetime.datetime(2006, 2, 27)
+            item1.source_org = 'Los Angeles Times'
+            item1.source_url = 'http://www.latimes.com'
+            item1.principles_url = 'http://www.latimes.com/news/nationworld/nation/la-0705lat_ethics_code-pdf,0,7257671.acrobat'
+            item1.license_url = 'http://www.latimes.com/services/site/lat-terms,0,6713384.htmlstory'
+            item1.license_description = 'Terms of service'
+            item1.locality = 'Los Angeles'
+            item1.country_name = 'US'
+            item1.save()
 
             # All the data is defined so lets render the test template...
             template = get_template('test.html')
@@ -672,6 +688,7 @@ class TemplateTagsTestCase(TestCase):
                     'event2': hcl2,
                     'feed': feed,
                     'entry': entry4,
+                    'item': item1,
                     }
             context = Context(data)
             import html_test
