@@ -34,7 +34,7 @@ Currently the supported microformats are:
 * hReview - for representing an opinion 
 * XFN - for representing friends and relationships
 * hAtom - for syndicated content
-* nNews - for online journalism
+* hNews - for online journalism
 
 In the code, you get the following:
 
