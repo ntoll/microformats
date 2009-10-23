@@ -34,6 +34,7 @@ Currently the supported microformats are:
 * hReview - for representing an opinion 
 * XFN - for representing friends and relationships
 * hAtom - for syndicated content
+* nNews - for online journalism
 
 In the code, you get the following:
 
@@ -46,7 +47,7 @@ and XFN microformats (models.py). hCard has two models:
     related tables)
 
 * Simplified forms for the geo, hCard, adr, org, email, tel and hCalendar,
-hListing, hReview, hFeed and hEntry microformats and fragments (forms.py).
+hListing, hReview, hFeed, hEntry and hNews microformats and fragments (forms.py).
 
 * Some useful admin functionality (admin.py).
 
@@ -181,6 +182,7 @@ HREVIEW_MICROFORMAT_TEMPLATE
 ADR_MICROFORMAT_TEMPLATE
 HFEED_MICROFORMAT_TEMPLATE
 HENTRY_MICROFORMAT_TEMPLATE
+HNEWS_MICROFROMAT_TEMPLATE
 
 For more examples check out the end of the following test file:
 
