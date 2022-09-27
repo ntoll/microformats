@@ -1,3 +1,5 @@
+** THIS REPOSITORY HAS BEEN ARCHIVED AND IS NO LONGER MAINTAINED **
+
 Django Microformat Application v0.1 (alpha)
 
 (c) 2009 Nicholas H.Tollervey (http://ntoll.org/contact)
